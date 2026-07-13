@@ -23,7 +23,7 @@
   --wolse:#2746E6; --wolse-bg:#EEF1FE; --chip:#F1F2F5;
   --danger:#E03A3A; --danger-bg:#FBEAEA;
   --gray:#727A86; --gray-bg:#F1F2F5;
-  --brand-dark:#143C28; --brand:#2E6B52; --brand-2:#3C9670; --gold:#D9A441;
+  --brand-dark:#143C28; --brand:#4C8A70; --brand-2:#3C9670; --gold:#D9A441;
   --shadow:0 1px 2px rgba(20,24,32,.04),0 6px 16px rgba(20,24,32,.06);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -95,7 +95,7 @@ nav.tabs button.on.routine{background:var(--sale-bg);color:var(--sale);border-co
 nav.tabs button.on.customer{background:var(--jeonse-bg);color:var(--jeonse);border-color:var(--jeonse-bg)}
 
 /* ---- 고객 선택 (매물뷰 스타일 커스텀 드롭다운) ---- */
-.cust-bar{padding:20px 12px 0;display:none;gap:8px;flex-direction:column}
+.cust-bar{padding:10px 12px 0;display:none;gap:8px;flex-direction:column}
 .sortpick-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:11px;background:var(--surface);font-weight:700;color:var(--ink);font-size:13.5px}
 .sortpick-btn .car{color:var(--muted);font-size:11px;transition:transform .15s}
 .sortpick-btn.open .car{transform:rotate(180deg)}
@@ -116,6 +116,15 @@ nav.tabs button.on.customer{background:var(--jeonse-bg);color:var(--jeonse);bord
 .chips{display:flex;gap:7px;overflow-x:auto;padding:12px 12px 4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;padding:7px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:12.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.chip.chip-all.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.chip-s0{background:var(--wolse-bg);border-color:var(--wolse-bg);color:var(--wolse)}
+.chip.chip-s0.on{background:var(--wolse);border-color:var(--wolse);color:#fff}
+.chip.chip-s1{background:var(--sale-bg);border-color:var(--sale-bg);color:var(--sale)}
+.chip.chip-s1.on{background:var(--sale);border-color:var(--sale);color:#fff}
+.chip.chip-s2{background:var(--jeonse-bg);border-color:var(--jeonse-bg);color:var(--jeonse)}
+.chip.chip-s2.on{background:var(--jeonse);border-color:var(--jeonse);color:#fff}
+.chip.chip-s3{background:var(--gray-bg);border-color:var(--gray-bg);color:var(--gray)}
+.chip.chip-s3.on{background:var(--gray);border-color:var(--gray);color:#fff}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .chip .n{opacity:.65;font-size:11.5px;margin-left:3px;font-variant-numeric:tabular-nums}
 
@@ -182,7 +191,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 .empty .em-s{font-size:13px}
 
 /* ---- FAB & 시트 ---- */
-.fab{position:absolute;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));background:var(--brand-2);color:#fff;font-weight:800;font-size:14px;padding:15px 22px;border-radius:999px;box-shadow:0 6px 18px rgba(31,122,77,.35);display:flex;align-items:center;gap:7px;pointer-events:auto}
+.fab{position:absolute;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));background:var(--brand-2);color:#fff;font-weight:800;font-size:14px;padding:15px 22px;border-radius:999px;box-shadow:0 6px 18px rgba(31,122,77,.35);display:flex;align-items:center;gap:7px;pointer-events:auto;touch-action:none;user-select:none}
 .fab:active{transform:scale(.96)}
 .scrim{position:fixed;inset:0;background:rgba(15,18,24,.42);z-index:50;display:none}
 .scrim.on{display:block}
@@ -337,10 +346,16 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   </div>
   <div class="f-row">
     <div class="f-group"><label>유형</label>
-      <select id="fType"><option>사무실</option><option>상가</option><option>공장창고</option><option>지식산업센터</option><option>건물</option><option>토지(나대지)</option><option>아파트</option><option>오피스텔</option><option>재건축재개발</option><option>주택빌라</option><option>원투룸</option><option>분양</option></select>
+      <div style="position:relative">
+        <button type="button" class="sortpick-btn" id="fTypeBtn"><span id="fTypeLabel">사무실</span><span class="car">▾</span></button>
+        <div class="sortpick-pop" id="fTypePop"></div>
+      </div>
     </div>
     <div class="f-group"><label>거래유형</label>
-      <select id="fDeal"><option>월세</option><option>전세</option><option>매매</option><option>단기임대</option></select>
+      <div style="position:relative">
+        <button type="button" class="sortpick-btn" id="fDealBtn"><span id="fDealLabel">월세</span><span class="car">▾</span></button>
+        <div class="sortpick-pop" id="fDealPop"></div>
+      </div>
     </div>
   </div>
   <div class="f-row">
@@ -507,7 +522,8 @@ function render(){
   const cnt = st => scopedForCount.filter(p=>p.파밍여부===st).length;
   $('chips').innerHTML = ['전체', ...STATUS].map(st=>{
     const n = st==='전체' ? scopedForCount.length : cnt(st);
-    return `<button class="chip ${state.statusFilter===st?'on':''}" data-status="${st}">${st}<span class="n">${n}</span></button>`;
+    const cls = st==='전체' ? 'all' : STATUS_CLASS[st];
+    return `<button class="chip chip-${cls} ${state.statusFilter===st?'on':''}" data-status="${st}">${st}<span class="n">${n}</span></button>`;
   }).join('');
 
   const list = visibleProps();
@@ -574,6 +590,10 @@ $('dateToday').onclick = ()=>{ state.date = todayStr(); render(); };
 let calTarget = 'main';
 let formDateValue = '';
 let formCustId = '';
+let formTypeValue = '사무실';
+let formDealValue = '월세';
+const TYPE_OPTIONS = ['사무실','상가','공장창고','지식산업센터','건물','토지(나대지)','아파트','오피스텔','재건축재개발','주택빌라','원투룸','분양'];
+const DEAL_OPTIONS = ['월세','전세','매매','단기임대'];
 
 function openCalendar(target, baseDate){
   calTarget = target || 'main';
@@ -695,13 +715,52 @@ function openSheet(editId){
   $('fDateLabel').textContent = formDateValue;
   $('fLink').value = p?.매물링크 || '';
   $('fName').value = p?.건물명||''; $('fAddr').value = p?.주소||'';
-  $('fType').value = p?.유형||'사무실'; $('fDeal').value = p?.거래유형||'월세';
+  formTypeValue = p?.유형 || '사무실';
+  formDealValue = p?.거래유형 || '월세';
+  $('fTypeLabel').textContent = formTypeValue;
+  $('fDealLabel').textContent = formDealValue;
+  renderFTypePop(); renderFDealPop();
   $('fFloor').value = p?.층수||''; $('fFloorAll').value = p?.총층||''; $('fArea').value = p?.전용면적||'';
   $('fDeposit').value = p?.보증금매매가||''; $('fRent').value = p?.월세||''; $('fMgmt').value = p?.관리비||'';
   $('fMemo').value = p?.메모||'';
   $('scrim').classList.add('on'); $('sheetAdd').classList.add('on');
 }
 function closeSheet(){ $('scrim').classList.remove('on'); $('sheetAdd').classList.remove('on'); }
+function renderFTypePop(){
+  $('fTypePop').innerHTML = TYPE_OPTIONS.map(t=>
+    `<div class="opt ${t===formTypeValue?'sel':''}" data-ftype="${t}"><span>${t}</span><span class="ck">✓</span></div>`
+  ).join('');
+}
+function renderFDealPop(){
+  $('fDealPop').innerHTML = DEAL_OPTIONS.map(t=>
+    `<div class="opt ${t===formDealValue?'sel':''}" data-fdeal="${t}"><span>${t}</span><span class="ck">✓</span></div>`
+  ).join('');
+}
+$('fTypeBtn').onclick = ()=>{ $('fTypeBtn').classList.toggle('open'); $('fTypePop').classList.toggle('open'); };
+$('fTypePop').addEventListener('click', e=>{
+  const o = e.target.closest('[data-ftype]'); if(!o) return;
+  formTypeValue = o.dataset.ftype;
+  $('fTypeLabel').textContent = formTypeValue;
+  $('fTypeBtn').classList.remove('open'); $('fTypePop').classList.remove('open');
+  renderFTypePop();
+});
+$('fDealBtn').onclick = ()=>{ $('fDealBtn').classList.toggle('open'); $('fDealPop').classList.toggle('open'); };
+$('fDealPop').addEventListener('click', e=>{
+  const o = e.target.closest('[data-fdeal]'); if(!o) return;
+  formDealValue = o.dataset.fdeal;
+  $('fDealLabel').textContent = formDealValue;
+  $('fDealBtn').classList.remove('open'); $('fDealPop').classList.remove('open');
+  renderFDealPop();
+});
+document.addEventListener('click', e=>{
+  if(!e.target.closest('#fTypeBtn') && !e.target.closest('#fTypePop')){
+    $('fTypeBtn').classList.remove('open'); $('fTypePop').classList.remove('open');
+  }
+  if(!e.target.closest('#fDealBtn') && !e.target.closest('#fDealPop')){
+    $('fDealBtn').classList.remove('open'); $('fDealPop').classList.remove('open');
+  }
+});
+
 function renderFCustPop(){
   $('fCustPop').innerHTML = sortedCustomers().map(c=>
     `<div class="opt ${c.고객ID===formCustId?'sel':''}" data-fcust="${c.고객ID}"><span>${c.고객ID} · ${c.고객명}</span><span class="ck">✓</span></div>`
@@ -722,7 +781,52 @@ document.addEventListener('click', e=>{
   }
 });
 
-$('fabAdd').onclick = ()=>openSheet();
+$('fabAdd').onclick = ()=>{ if(!$('fabAdd').dataset.justDragged) openSheet(); };
+
+/* ===== FAB 드래그 이동 ===== */
+(function(){
+  const fab = $('fabAdd'), wrap = $('fabWrap');
+  const POS_KEY = 'farming_fab_pos';
+  let dragging=false, moved=false, startX=0, startY=0, origLeft=0, origTop=0;
+
+  function applyPos(left, top){
+    fab.style.left = left+'px'; fab.style.top = top+'px';
+    fab.style.right='auto'; fab.style.bottom='auto';
+  }
+  try{
+    const saved = JSON.parse(localStorage.getItem(POS_KEY));
+    if(saved && typeof saved.left==='number') applyPos(saved.left, saved.top);
+  }catch(e){}
+
+  fab.addEventListener('pointerdown', e=>{
+    dragging=true; moved=false;
+    const r = fab.getBoundingClientRect();
+    startX=e.clientX; startY=e.clientY; origLeft=r.left; origTop=r.top;
+    fab.setPointerCapture(e.pointerId);
+  });
+  fab.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    const dx=e.clientX-startX, dy=e.clientY-startY;
+    if(Math.abs(dx)>4 || Math.abs(dy)>4) moved=true;
+    if(!moved) return;
+    const wrapRect = wrap.getBoundingClientRect();
+    const r = fab.getBoundingClientRect();
+    let left = origLeft+dx-wrapRect.left;
+    let top = origTop+dy-wrapRect.top;
+    left = Math.max(4, Math.min(left, wrapRect.width-r.width-4));
+    top = Math.max(4, Math.min(top, wrapRect.height-r.height-4));
+    applyPos(left, top);
+  });
+  fab.addEventListener('pointerup', e=>{
+    if(!dragging) return;
+    dragging=false;
+    if(moved){
+      try{ localStorage.setItem(POS_KEY, JSON.stringify({left:parseFloat(fab.style.left), top:parseFloat(fab.style.top)})); }catch(er){}
+      fab.dataset.justDragged = '1';
+      setTimeout(()=>{ delete fab.dataset.justDragged; }, 80);
+    }
+  });
+})();
 $('scrim').onclick = e=>{ if(e.target.id==='scrim') closeSheet(); };
 
 $('btnSave').onclick = async ()=>{
@@ -735,7 +839,7 @@ $('btnSave').onclick = async ()=>{
   Object.assign(p, {
     파밍일자: formDateValue || todayStr(),
     매물링크: link, 건물명:$('fName').value.trim(), 주소:$('fAddr').value.trim(),
-    유형:$('fType').value, 거래유형:$('fDeal').value,
+    유형: formTypeValue, 거래유형: formDealValue,
     층수:$('fFloor').value.trim(), 총층:$('fFloorAll').value.trim(), 전용면적:$('fArea').value.trim(),
     보증금매매가:$('fDeposit').value.trim(), 월세:$('fRent').value.trim(), 관리비:$('fMgmt').value.trim(),
     메모:$('fMemo').value.trim(), 고객ID: custId,
