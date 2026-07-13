@@ -409,6 +409,9 @@ function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('sho
 function mapUrl(addr){ return 'https://map.naver.com/p/search/' + encodeURIComponent(addr); }
 const TYPE_CLASS_MAP = {'토지(나대지)':'토지', '재건축재개발':'재개발'};
 function typeClass(t){ return TYPE_CLASS_MAP[t] || t || ''; }
+function sortedCustomers(){
+  return [...state.customers].sort((a,b)=> String(a.고객ID).localeCompare(String(b.고객ID)));
+}
 function propLinkUrl(v){
   if(!v) return '';
   const s = String(v).trim();
@@ -486,7 +489,7 @@ function render(){
   $('custBar').style.display = state.scope==='customer' ? 'flex' : 'none';
 
   if(state.scope==='customer'){
-    const options = [{id:'', label:'전체 고객'}, ...state.customers.map(c=>({id:c.고객ID, label:c.고객ID+' · '+c.고객명}))];
+    const options = [{id:'', label:'전체 고객'}, ...sortedCustomers().map(c=>({id:c.고객ID, label:c.고객ID+' · '+c.고객명}))];
     const selOpt = options.find(o=>o.id===state.custId) || options[0];
     $('custPickLabel').textContent = selOpt.label;
     $('custPickPop').innerHTML = options.map(o=>
@@ -702,7 +705,7 @@ function openSheet(editId){
 }
 function closeSheet(){ $('scrim').classList.remove('on'); $('sheetAdd').classList.remove('on'); }
 function renderFCustPop(){
-  $('fCustPop').innerHTML = state.customers.map(c=>
+  $('fCustPop').innerHTML = sortedCustomers().map(c=>
     `<div class="opt ${c.고객ID===formCustId?'sel':''}" data-fcust="${c.고객ID}"><span>${c.고객ID} · ${c.고객명}</span><span class="ck">✓</span></div>`
   ).join('') || '<div class="opt">등록된 고객이 없습니다</div>';
 }
@@ -766,7 +769,7 @@ $('custModalScrim').onclick = e=>{ if(e.target.id==='custModalScrim') $('custMod
 
 /* ===== 고객 전체 리스트 ===== */
 function openCustList(){
-  $('custListBody').innerHTML = state.customers.map(c=>
+  $('custListBody').innerHTML = sortedCustomers().map(c=>
     `<div class="custlist-item" data-cust="${c.고객ID}">
       <div class="cn">${c.고객ID} · ${c.고객명}</div>
       <div class="cs">${c.희망지역||'-'} · ${c.희망거래유형||'-'} · ${c.평수최소||'?'}~${c.평수최대||'?'}평</div>
