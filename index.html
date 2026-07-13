@@ -75,7 +75,7 @@ button{font-family:inherit;border:none;background:none;cursor:pointer;color:inhe
 #lockScreen .lock-err{font-size:13px;font-weight:700;color:var(--danger);text-align:center;margin-top:10px;min-height:20px}
 
 /* ---- 헤더 ---- */
-header{background:var(--surface); border-bottom:1px solid var(--line); padding:calc(env(safe-area-inset-top) + 12px) 16px 0; position:sticky; top:0; z-index:30}
+header{background:var(--surface); border-bottom:1px solid var(--line); padding:calc(env(safe-area-inset-top) + 12px) 12px 0; position:sticky; top:0; z-index:30}
 .head-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .brand{display:flex;align-items:baseline;gap:8px;cursor:pointer}
 .brand .logo{font-size:20px;font-weight:800;letter-spacing:-.04em;margin:0;color:var(--ink);line-height:1}
@@ -106,7 +106,7 @@ nav.tabs button.on.routine{background:var(--sale-bg);color:var(--sale);border-co
 nav.tabs button.on.customer{background:var(--jeonse-bg);color:var(--jeonse);border-color:var(--jeonse-bg)}
 
 /* ---- 고객 선택 (매물뷰 스타일 커스텀 드롭다운) ---- */
-.cust-bar{padding:0 16px 0;display:none;gap:8px;flex-direction:column}
+.cust-bar{padding:0 12px 0;display:none;gap:8px;flex-direction:column}
 .sortpick-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:11px;background:var(--surface);font-weight:700;color:var(--ink);font-size:13.5px}
 .sortpick-btn .car{color:var(--muted);font-size:11px;transition:transform .15s}
 .sortpick-btn.open .car{transform:rotate(180deg)}
@@ -123,7 +123,7 @@ nav.tabs button.on.customer{background:var(--jeonse-bg);color:var(--jeonse);bord
 .cond-chip .more{margin-left:auto;color:var(--brand-2);font-weight:800;font-size:12px}
 
 /* ---- 필터 칩 ---- */
-.chips{display:flex;gap:7px;overflow-x:auto;padding:12px 10px 4px;scrollbar-width:none}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:12px 12px 4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;padding:7px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:12.5px;font-weight:700;color:var(--muted);white-space:nowrap}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
@@ -133,7 +133,7 @@ nav.tabs button.on.customer{background:var(--jeonse-bg);color:var(--jeonse);bord
 .banner.show{display:block}
 
 /* ---- 카드 ---- */
-main{padding:8px 10px 0;display:flex;flex-direction:column;gap:11px}
+main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 .card{border-radius:14px;padding:13px 14px 12px;box-shadow:var(--shadow);border:1px solid var(--line);background:var(--surface)}
 .card.st-s0{background:#FBFCFF;border-color:#E4E9FB}
 .card.st-s1{background:#F6FBF7;border-color:#DCEEE1}
