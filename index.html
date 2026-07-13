@@ -22,7 +22,7 @@
   --sale:#1F7A4D; --sale-bg:#E7F4ED; --jeonse:#9A5B14; --jeonse-bg:#FBF1E2;
   --wolse:#2746E6; --wolse-bg:#EEF1FE; --chip:#F1F2F5;
   --danger:#E03A3A; --danger-bg:#FBEAEA;
-  --gray:#727A86; --gray-bg:#EEF0F3;
+  --gray:#727A86; --gray-bg:#F1F2F5;
   --brand-dark:#143C28; --brand:#2E6B52; --brand-2:#3C9670; --gold:#D9A441;
   --shadow:0 1px 2px rgba(20,24,32,.04),0 6px 16px rgba(20,24,32,.06);
 }
@@ -149,6 +149,19 @@ main{padding:8px 10px 0;display:flex;flex-direction:column;gap:11px}
 .tag.deal.전세{background:var(--jeonse-bg);color:var(--jeonse)}
 .tag.deal.매매{background:var(--sale-bg);color:var(--sale)}
 .tag.deal.단기임대{background:#E9EDF5;color:#5A6B86}
+/* 매물종류 — 매물뷰 팔레트 그대로 */
+.tag.type-상가{background:#E8EEFF;color:#2746E6}
+.tag.type-사무실{background:#E9EAFB;color:#3D43C4}
+.tag.type-지식산업센터{background:#E5F0FA;color:#1E6FB8}
+.tag.type-건물{background:#ECEAF8;color:#5B3FB5}
+.tag.type-아파트{background:#E4F5EA;color:#1F7A4D}
+.tag.type-오피스텔{background:#E2F4F0;color:#0E8C7A}
+.tag.type-주택빌라{background:#EBF4E0;color:#4F7A1F}
+.tag.type-원투룸{background:#E1F3F7;color:#11789B}
+.tag.type-공장창고{background:#F2EDE4;color:#876730}
+.tag.type-토지{background:#FBF1DD;color:#9A6B14}
+.tag.type-재개발{background:#F6E9E2;color:#B05A2E}
+.tag.type-분양{background:#F6E7F1;color:#A23B86}
 .tag.fit-적합{background:var(--sale-bg);color:var(--sale)}
 .tag.fit-적합_예산확인{background:var(--jeonse-bg);color:var(--jeonse)}
 .tag.fit-조건미달{background:var(--danger-bg);color:var(--danger)}
@@ -410,6 +423,8 @@ const num = v => { const n = parseFloat(String(v).replace(/,/g,'')); return isNa
 const fmt = v => { const n = num(v); return n===null ? '-' : n.toLocaleString('ko-KR'); };
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 function mapUrl(addr){ return 'https://map.naver.com/p/search/' + encodeURIComponent(addr); }
+const TYPE_CLASS_MAP = {'토지(나대지)':'토지', '재건축재개발':'재개발'};
+function typeClass(t){ return TYPE_CLASS_MAP[t] || t || ''; }
 function propLinkUrl(v){
   if(!v) return '';
   const s = String(v).trim();
@@ -530,7 +545,7 @@ function render(){
         <div style="min-width:0">
           <div class="tags">
             ${p.거래유형?`<span class="tag deal ${p.거래유형}">${p.거래유형}</span>`:''}
-            ${p.유형?`<span class="tag">${p.유형}</span>`:''}
+            ${p.유형?`<span class="tag type-${typeClass(p.유형)}">${p.유형}</span>`:''}
             ${fit?`<span class="tag ${fitClass}">${fit}</span>`:''}
           </div>
           <div class="bname">${p.건물명 || p.주소 || '(이름 없음)'}</div>
