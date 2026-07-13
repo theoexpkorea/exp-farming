@@ -527,7 +527,11 @@ function render(){
 
   const list = visibleProps();
   if(!list.length){
-    $('list').innerHTML = `<div class="empty"><div class="em-t">이 날짜엔 파밍 매물이 없습니다</div><div class="em-s">아래 ＋ 버튼으로 매물을 추가하세요</div></div>`;
+    if(state.statusFilter !== '전체' && scopedForCount.length > 0){
+      $('list').innerHTML = `<div class="empty"><div class="em-t">'${state.statusFilter}' 상태인 매물이 없습니다</div><div class="em-s">전체 ${scopedForCount.length}건 중 이 상태는 0건이에요. 다른 상태를 확인해보세요</div></div>`;
+    } else {
+      $('list').innerHTML = `<div class="empty"><div class="em-t">이 날짜엔 파밍 매물이 없습니다</div><div class="em-s">아래 ＋ 버튼으로 매물을 추가하세요</div></div>`;
+    }
     return;
   }
   $('list').innerHTML = list.map(p=>{
