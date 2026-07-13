@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1B2A41">
+<title>파밍서치 · eXp Korea</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{
+  --ink:#1B2A41; --ink-soft:#3D5068; --paper:#F4F5F2; --card:#FFFFFF;
+  --line:#E3E6E0; --muted:#8A94A0;
+  --blue:#1565C0; --blue-bg:#E8F1FB;
+  --green:#2E7D32; --green-bg:#E9F4EA;
+  --amber:#B26A00; --amber-bg:#FBF1DF;
+  --red:#C62828; --red-bg:#FBEAEA;
+  --hl:#FFD84D;
+  --radius:14px;
+  font-size:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:"Apple SD Gothic Neo","Pretendard","Noto Sans KR",-apple-system,system-ui,sans-serif;
+  background:var(--paper); color:var(--ink); min-height:100vh; padding-bottom:96px;
+}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit;font-size:1rem}
+
+/* ── 헤더 ─────────────────────── */
+header{
+  background:var(--ink); color:#fff; padding:14px 16px 0;
+  position:sticky; top:0; z-index:30;
+}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.logo{font-weight:800;font-size:1.15rem;letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.logo .dot{width:10px;height:10px;border-radius:3px;background:var(--hl);display:inline-block}
+.head-actions{display:flex;gap:6px}
+.icon-btn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.09);font-size:1.05rem}
+.icon-btn:active{background:rgba(255,255,255,.2)}
+/* 루틴 카운터 */
+.routine{
+  margin-top:10px;background:rgba(255,255,255,.07);border-radius:12px 12px 0 0;
+  padding:9px 12px;display:flex;gap:14px;align-items:center;font-size:.83rem;color:#D8DEE7;
+}
+.routine b{color:#fff;font-variant-numeric:tabular-nums}
+.routine .done{color:var(--hl)}
+.routine-label{font-size:.72rem;letter-spacing:.08em;color:#9AA7B8}
+/* 탭 */
+nav.tabs{display:flex;background:var(--ink)}
+nav.tabs button{
+  flex:1;padding:12px 0 13px;color:#93A1B3;font-weight:700;font-size:.95rem;
+  border-bottom:3px solid transparent;
+}
+nav.tabs button.on{color:#fff;border-bottom-color:var(--hl)}
+
+/* ── 고객 조건 요약 ─────────────── */
+.cust-bar{padding:12px 16px 0}
+.cust-bar select{
+  width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--radius);
+  background:var(--card);font-weight:700;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%233D5068' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+}
+.cond{
+  margin:8px 16px 0;background:var(--card);border:1.5px dashed var(--line);
+  border-radius:var(--radius);padding:10px 14px;font-size:.83rem;color:var(--ink-soft);
+  display:none;line-height:1.65;
+}
+.cond.show{display:block}
+.cond b{color:var(--ink)}
+
+/* ── 필터 칩 ───────────────────── */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 16px 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;padding:8px 14px;border-radius:99px;background:var(--card);
+  border:1.5px solid var(--line);font-size:.85rem;font-weight:600;color:var(--ink-soft);white-space:nowrap;
+}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip .n{opacity:.65;font-size:.78rem;margin-left:3px;font-variant-numeric:tabular-nums}
+
+/* ── 카드 ─────────────────────── */
+main{padding:8px 16px 0;display:flex;flex-direction:column;gap:12px}
+.card{
+  background:var(--card);border-radius:var(--radius);padding:14px 14px 12px;
+  border:1px solid var(--line);box-shadow:0 1px 2px rgba(27,42,65,.05);
+}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
+.tag{font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--paper);color:var(--ink-soft)}
+.tag.deal{background:var(--blue-bg);color:var(--blue)}
+.tag.fit-ok{background:var(--green-bg);color:var(--green)}
+.tag.fit-check{background:var(--amber-bg);color:var(--amber)}
+.tag.fit-no{background:var(--red-bg);color:var(--red)}
+.bname{font-size:1.05rem;font-weight:800;letter-spacing:-.01em}
+.addr{font-size:.83rem;color:var(--muted);margin-top:2px}
+.specs{margin-top:8px;font-size:.87rem;color:var(--ink-soft);display:flex;flex-wrap:wrap;gap:4px 12px}
+.specs b{color:var(--ink);font-variant-numeric:tabular-nums}
+.pyung{font-weight:800;color:var(--ink)}
+.memo{margin-top:7px;font-size:.83rem;color:var(--ink-soft);background:var(--paper);border-radius:8px;padding:7px 10px}
+.card-foot{display:flex;align-items:center;gap:8px;margin-top:11px}
+.link-btn{
+  flex:1;text-align:center;padding:9px 0;border-radius:10px;font-size:.87rem;font-weight:700;
+  text-decoration:none;border:1.5px solid var(--line);color:var(--ink-soft);background:var(--card);
+}
+.link-btn:active{background:var(--paper)}
+.fdate{font-size:.74rem;color:var(--muted);margin-left:auto;flex:none;font-variant-numeric:tabular-nums}
+/* 파밍 스탬프 */
+.stamp{
+  flex:none;min-width:86px;padding:8px 10px;border-radius:10px;font-weight:800;font-size:.85rem;
+  border:2px solid; letter-spacing:-.01em; transition:transform .08s;
+}
+.stamp:active{transform:scale(.94)}
+.stamp.s0{color:var(--blue);border-color:var(--blue);background:var(--blue-bg)}
+.stamp.s1{color:var(--green);border-color:var(--green);background:var(--green-bg)}
+.stamp.s2{color:var(--amber);border-color:var(--amber);background:var(--amber-bg)}
+.empty{
+  text-align:center;color:var(--muted);padding:56px 20px;font-size:.92rem;line-height:1.7;
+}
+.empty b{color:var(--ink-soft)}
+
+/* ── FAB & 시트 ────────────────── */
+.fab{
+  position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:40;
+  background:var(--ink);color:#fff;font-weight:800;font-size:.95rem;
+  padding:15px 22px;border-radius:99px;box-shadow:0 6px 18px rgba(27,42,65,.35);
+  display:flex;align-items:center;gap:7px;
+}
+.fab:active{transform:scale(.96)}
+.sheet-bg{position:fixed;inset:0;background:rgba(20,28,42,.45);z-index:50;display:none}
+.sheet-bg.show{display:block}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--card);
+  border-radius:20px 20px 0 0;max-height:88vh;overflow-y:auto;
+  transform:translateY(105%);transition:transform .25s ease;
+  padding:18px 18px calc(24px + env(safe-area-inset-bottom));
+}
+.sheet.show{transform:translateY(0)}
+.sheet h2{font-size:1.05rem;margin-bottom:14px}
+.grabber{width:38px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px}
+.f-row{display:flex;gap:10px}
+.f-row>*{flex:1}
+.f-group{margin-bottom:12px}
+.f-group label{display:block;font-size:.78rem;font-weight:700;color:var(--ink-soft);margin-bottom:5px}
+.f-group input,.f-group select,.f-group textarea{
+  width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;
+}
+.f-group textarea{resize:none;height:64px}
+.f-group input:focus,.f-group select:focus,.f-group textarea:focus{outline:none;border-color:var(--ink-soft)}
+.hint{font-size:.72rem;color:var(--muted);margin-top:4px}
+.submit{
+  width:100%;padding:15px;border-radius:12px;background:var(--ink);color:#fff;
+  font-weight:800;font-size:1rem;margin-top:6px;
+}
+.submit:disabled{opacity:.5}
+/* 설정 */
+.set-note{font-size:.8rem;color:var(--ink-soft);line-height:1.6;background:var(--paper);border-radius:10px;padding:10px 12px;margin-bottom:12px}
+/* 배너/토스트 */
+.banner{
+  margin:12px 16px 0;background:var(--amber-bg);color:var(--amber);border-radius:10px;
+  padding:9px 12px;font-size:.8rem;font-weight:600;display:none;
+}
+.banner.show{display:block}
+.toast{
+  position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-size:.85rem;font-weight:600;
+  opacity:0;transition:.25s;z-index:70;pointer-events:none;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-row">
+    <div class="logo"><span class="dot"></span>파밍서치</div>
+    <div class="head-actions">
+      <button class="icon-btn" id="btnRefresh" title="새로고침">⟳</button>
+      <button class="icon-btn" id="btnSettings" title="설정">⚙</button>
+    </div>
+  </div>
+  <div class="routine">
+    <span class="routine-label">오늘 루틴</span>
+    <span>상가 <b id="rtSanga">0</b>/1</span>
+    <span>사무실 <b id="rtOffice">0</b>/1</span>
+    <span id="rtMsg" style="margin-left:auto"></span>
+  </div>
+  <nav class="tabs">
+    <button id="tabRoutine" class="on">루틴 파밍</button>
+    <button id="tabCust">고객 파밍</button>
+  </nav>
+</header>
+
+<div class="banner" id="demoBanner">데모 데이터로 실행 중 — ⚙ 설정에서 Apps Script URL을 연결하세요.</div>
+
+<div class="cust-bar" id="custBar" style="display:none">
+  <select id="custSelect"></select>
+  <div class="cond" id="condBox"></div>
+</div>
+
+<div class="chips" id="chips"></div>
+
+<main id="list"></main>
+
+<button class="fab" id="fabAdd">＋ 매물 추가</button>
+
+<!-- 매물 추가/수정 시트 -->
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheetAdd">
+  <div class="grabber"></div>
+  <h2 id="sheetTitle">매물 추가</h2>
+  <div class="f-group">
+    <label>네이버 매물번호</label>
+    <input id="fNaver" inputmode="numeric" placeholder="예: 2636492527">
+    <div class="hint">번호만 붙여넣으면 매물보기 링크가 자동 생성됩니다</div>
+  </div>
+  <div class="f-group"><label>건물명</label><input id="fName" placeholder="예: 동양섬유사옥"></div>
+  <div class="f-group">
+    <label>주소</label><input id="fAddr" placeholder="예: 서울특별시 중구 신당동 421-5">
+    <div class="hint">주소 입력 시 네이버지도 링크 자동 생성</div>
+  </div>
+  <div class="f-row">
+    <div class="f-group"><label>유형</label>
+      <select id="fType"><option>사무실</option><option>상가</option><option>공장창고</option><option>지식산업센터</option><option>건물</option><option>토지(나대지)</option><option>아파트</option><option>오피스텔</option><option>재건축재개발</option><option>주택빌라</option><option>원투룸</option><option>분양</option></select>
+    </div>
+    <div class="f-group"><label>거래유형</label>
+      <select id="fDeal"><option>월세</option><option>전세</option><option>매매</option><option>단기임대</option></select>
+    </div>
+  </div>
+  <div class="f-row">
+    <div class="f-group"><label>층수</label><input id="fFloor" placeholder="4"></div>
+    <div class="f-group"><label>총층</label><input id="fFloorAll" placeholder="8"></div>
+    <div class="f-group"><label>전용면적(평)</label><input id="fArea" inputmode="decimal" placeholder="55"></div>
+  </div>
+  <div class="f-row">
+    <div class="f-group"><label>보증금/매매가(만)</label><input id="fDeposit" inputmode="numeric" placeholder="5000"></div>
+    <div class="f-group"><label>월세(만)</label><input id="fRent" inputmode="numeric" placeholder="400"></div>
+    <div class="f-group"><label>관리비(만)</label><input id="fMgmt" inputmode="numeric" placeholder="225"></div>
+  </div>
+  <div class="f-row">
+    <div class="f-group"><label>방향</label>
+      <select id="fDir"><option value="">-</option><option>동</option><option>서</option><option>남</option><option>북</option><option>남동</option><option>남서</option><option>북동</option><option>북서</option></select>
+    </div>
+    <div class="f-group"><label>고객 배정</label><select id="fCust"><option value="">루틴 (배정 없음)</option></select></div>
+  </div>
+  <div class="f-group"><label>특징/메모</label><textarea id="fMemo" placeholder="주차 가능, 컨디션 양호 등"></textarea></div>
+  <button class="submit" id="btnSave">저장</button>
+</div>
+
+<!-- 설정 시트 -->
+<div class="sheet" id="sheetSet">
+  <div class="grabber"></div>
+  <h2>설정</h2>
+  <div class="set-note">
+    Google Apps Script 웹앱 URL을 입력하면 구글 시트와 실시간 연동됩니다.<br>
+    비워두면 데모 데이터로 동작합니다. (SETUP 문서 참고)
+  </div>
+  <div class="f-group">
+    <label>Apps Script 웹앱 URL</label>
+    <input id="fApi" placeholder="https://script.google.com/macros/s/.../exec">
+  </div>
+  <button class="submit" id="btnSaveApi">저장 후 다시 불러오기</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════ 상태 ══════════════ */
+const STATUS = ['파밍예정','파밍완료','파밍보류'];           // 스탬프 탭 순환 순서
+const STATUS_CLASS = {'파밍예정':'s0','파밍완료':'s1','파밍보류':'s2'};
+let API_URL = '';
+try { API_URL = localStorage.getItem('fs_api') || ''; } catch(e){}
+
+let state = {
+  tab: 'routine',            // routine | cust
+  custId: '',
+  statusFilter: '전체',
+  typeFilter: '전체',
+  customers: [],
+  properties: [],
+  editId: null,
+};
+
+/* 데모 데이터 (API 미연결 시) */
+const DEMO = {
+  customers: [
+    {고객ID:'SH0006', 고객구분:'SH', 고객명:'의류디자인 사무실', 희망거래유형:'월세', 평수최소:50, 평수최대:70,
+     예산보증금:'시세', 예산월세:'시세', 희망지역:'서울', 기타요청:'컨디션이 좋을 것, 주차 가능 필수'},
+  ],
+  properties: [
+    {매물ID:'F0001', 고객ID:'SH0006', 건물명:'동양섬유사옥', 주소:'서울특별시 중구 신당동 421-5',
+     유형:'사무실', 거래유형:'월세', 층수:'4', 총층:'', 전용면적:55, 보증금매매가:5000, 월세:400,
+     관리비:225, 방향:'남서', 메모:'', 네이버번호:'2636492527', 파밍여부:'파밍예정', 파밍일자:'2026-07-12'},
+    {매물ID:'F0002', 고객ID:'SH0006', 건물명:'', 주소:'서울특별시 중구 신당동 417-6',
+     유형:'', 거래유형:'', 층수:'', 총층:'', 전용면적:'', 보증금매매가:'', 월세:'',
+     관리비:'', 방향:'', 메모:'', 네이버번호:'2636492527', 파밍여부:'파밍예정', 파밍일자:''},
+    {매물ID:'F0003', 고객ID:'SH0006', 건물명:'', 주소:'',
+     유형:'', 거래유형:'', 층수:'', 총층:'', 전용면적:'', 보증금매매가:'', 월세:'',
+     관리비:'', 방향:'', 메모:'', 네이버번호:'2631660298', 파밍여부:'파밍예정', 파밍일자:''},
+  ]
+};
+
+/* ══════════════ 유틸 ══════════════ */
+const $ = id => document.getElementById(id);
+const todayStr = () => new Date().toISOString().slice(0,10);
+const num = v => { const n = parseFloat(String(v).replace(/,/g,'')); return isNaN(n) ? null : n; };
+const fmt = v => { const n = num(v); return n===null ? '-' : n.toLocaleString('ko-KR'); };
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+
+function mapUrl(addr){ return 'https://map.naver.com/p/search/' + encodeURIComponent(addr); }
+function articleUrl(no){ return 'https://fin.land.naver.com/articles/' + no; }
+
+/* 평단가: 월세/단기임대 → 월세÷평, 그 외 → 보증금매매가÷평 (엑셀 M열 로직) */
+function pyungPrice(p){
+  const area = num(p.전용면적); if(!area) return null;
+  const base = (p.거래유형==='월세'||p.거래유형==='단기임대') ? num(p.월세) : num(p.보증금매매가);
+  if(base===null) return null;
+  return Math.round(base/area*10)/10;
+}
+
+/* 적합여부: 엑셀 R열 로직 포팅 (거래유형 → 평수 min/max → 예산; '시세' 등 비숫자 예산은 통과) */
+function fitness(p, c){
+  if(!c || !num(p.전용면적) || !p.거래유형) return null;
+  if(c.희망거래유형 && c.희망거래유형!=='무관' && c.희망거래유형!==p.거래유형) return '조건미달';
+  const area = num(p.전용면적), aMin = num(c.평수최소), aMax = num(c.평수최대);
+  if(aMin!==null && area<aMin) return '조건미달';
+  if(aMax!==null && area>aMax) return '조건미달';
+  const bDep = num(c.예산보증금), bRent = num(c.예산월세);
+  let needCheck = false;
+  if(bDep!==null){ if(num(p.보증금매매가)!==null && num(p.보증금매매가)>bDep) return '조건미달'; }
+  else needCheck = true;
+  if(p.거래유형==='월세'||p.거래유형==='단기임대'){
+    if(bRent!==null){ if(num(p.월세)!==null && num(p.월세)>bRent) return '조건미달'; }
+    else needCheck = true;
+  }
+  return needCheck ? '적합(예산확인)' : '적합';
+}
+
+/* ══════════════ API ══════════════ */
+async function loadData(showToast){
+  if(!API_URL){
+    state.customers = DEMO.customers; state.properties = DEMO.properties;
+    $('demoBanner').classList.add('show'); render(); return;
+  }
+  $('demoBanner').classList.remove('show');
+  try{
+    const r = await fetch(API_URL + '?action=all&t=' + Date.now());
+    const d = await r.json();
+    state.customers = d.customers || [];
+    state.properties = d.properties || [];
+    try{ localStorage.setItem('fs_cache', JSON.stringify({t:Date.now(), d})); }catch(e){}
+    render();
+    if(showToast) toast('불러오기 완료');
+  }catch(e){
+    // 오프라인: 캐시 폴백
+    try{
+      const c = JSON.parse(localStorage.getItem('fs_cache'));
+      if(c){ state.customers=c.d.customers||[]; state.properties=c.d.properties||[]; render(); toast('오프라인 — 캐시 데이터'); return; }
+    }catch(_){}
+    toast('불러오기 실패'); render();
+  }
+}
+
+function post(payload){
+  if(!API_URL) return Promise.resolve(null);
+  // text/plain 전송으로 CORS preflight 회피 (Apps Script 표준 패턴)
+  return fetch(API_URL, {method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(payload)})
+    .then(r=>r.json()).catch(()=>{ toast('전송 실패 — 시트에 반영되지 않았을 수 있습니다'); return null; });
+}
+
+/* ══════════════ 렌더 ══════════════ */
+function visibleProps(){
+  return state.properties.filter(p=>{
+    const isRoutine = !p.고객ID;
+    if(state.tab==='routine' && !isRoutine) return false;
+    if(state.tab==='cust' && (isRoutine || (state.custId && p.고객ID!==state.custId))) return false;
+    if(state.statusFilter!=='전체' && p.파밍여부!==state.statusFilter) return false;
+    if(state.typeFilter!=='전체' && p.유형!==state.typeFilter) return false;
+    return true;
+  });
+}
+
+function render(){
+  /* 루틴 카운터: 오늘 등록/파밍한 루틴 매물 */
+  const today = todayStr();
+  const todayRoutine = state.properties.filter(p=>!p.고객ID && (p.파밍일자===today || p.등록일===today));
+  const s = todayRoutine.filter(p=>p.유형==='상가').length;
+  const o = todayRoutine.filter(p=>p.유형==='사무실').length;
+  $('rtSanga').textContent = s; $('rtOffice').textContent = o;
+  $('rtSanga').className = s>=1?'done':''; $('rtOffice').className = o>=1?'done':'';
+  $('rtMsg').textContent = (s>=1&&o>=1) ? '오늘 루틴 완료 ✓' : '';
+
+  /* 탭/고객바 */
+  $('tabRoutine').classList.toggle('on', state.tab==='routine');
+  $('tabCust').classList.toggle('on', state.tab==='cust');
+  $('custBar').style.display = state.tab==='cust' ? 'block' : 'none';
+
+  if(state.tab==='cust'){
+    const sel = $('custSelect');
+    sel.innerHTML = '<option value="">전체 고객</option>' +
+      state.customers.map(c=>`<option value="${c.고객ID}" ${c.고객ID===state.custId?'selected':''}>${c.고객명}</option>`).join('');
+    const c = state.customers.find(x=>x.고객ID===state.custId);
+    const box = $('condBox');
+    if(c){
+      box.className='cond show';
+      box.innerHTML = `<b>${c.고객명}</b> · ${c.희망지역||'-'} · ${c.희망거래유형||'-'}
+        · <b>${c.평수최소||'?'}~${c.평수최대||'?'}평</b>
+        · 보증금 ${c.예산보증금||'-'} / 월세 ${c.예산월세||'-'}
+        ${c.기타요청 ? '<br>· '+c.기타요청 : ''}`;
+    } else box.className='cond';
+  }
+
+  /* 필터 칩 */
+  const props = state.properties.filter(p=> state.tab==='routine' ? !p.고객ID : !!p.고객ID && (!state.custId || p.고객ID===state.custId));
+  const cnt = st => props.filter(p=>p.파밍여부===st).length;
+  const types = [...new Set(props.map(p=>p.유형).filter(Boolean))];
+  let chips = ['전체', ...STATUS].map(st=>{
+    const n = st==='전체' ? props.length : cnt(st);
+    return `<button class="chip ${state.statusFilter===st?'on':''}" data-status="${st}">${st}<span class="n">${n}</span></button>`;
+  }).join('');
+  chips += types.map(t=>`<button class="chip ${state.typeFilter===t?'on':''}" data-type="${t}">${t}</button>`).join('');
+  $('chips').innerHTML = chips;
+
+  /* 카드 목록 */
+  const list = visibleProps();
+  const cust = state.customers.find(x=>x.고객ID===state.custId);
+  if(!list.length){
+    $('list').innerHTML = `<div class="empty"><b>표시할 매물이 없습니다</b><br>아래 ＋ 버튼으로 파밍 매물을 추가하세요</div>`;
+    return;
+  }
+  $('list').innerHTML = list.map(p=>{
+    const pp = pyungPrice(p);
+    const fitC = state.tab==='cust'
+      ? fitness(p, state.custId ? cust : state.customers.find(x=>x.고객ID===p.고객ID))
+      : null;
+    const fitTag = fitC ? `<span class="tag ${fitC==='적합'?'fit-ok':fitC==='조건미달'?'fit-no':'fit-check'}">${fitC}</span>` : '';
+    const custName = (state.tab==='cust' && !state.custId)
+      ? (state.customers.find(x=>x.고객ID===p.고객ID)||{}).고객명 : '';
+    const priceLine = (p.거래유형==='월세'||p.거래유형==='단기임대')
+      ? `보증금 <b>${fmt(p.보증금매매가)}</b> · 월 <b>${fmt(p.월세)}</b>${num(p.관리비)!==null?` · 관리 <b>${fmt(p.관리비)}</b>`:''}`
+      : `${p.거래유형==='매매'?'매매가':'보증금'} <b>${fmt(p.보증금매매가)}</b>`;
+    return `<div class="card">
+      <div class="card-top">
+        <div style="min-width:0">
+          <div class="tags">
+            ${p.유형?`<span class="tag">${p.유형}</span>`:''}
+            ${p.거래유형?`<span class="tag deal">${p.거래유형}</span>`:''}
+            ${custName?`<span class="tag">${custName}</span>`:''}
+            ${fitTag}
+          </div>
+          <div class="bname">${p.건물명 || p.주소 || '(이름 없음)'}</div>
+          ${p.건물명 && p.주소 ? `<div class="addr">${p.주소}</div>` : ''}
+        </div>
+        <button class="stamp ${STATUS_CLASS[p.파밍여부]||'s0'}" data-stamp="${p.매물ID}">${p.파밍여부||'파밍예정'}</button>
+      </div>
+      <div class="specs">
+        ${num(p.전용면적)!==null?`<span class="pyung">${p.전용면적}평</span>`:''}
+        ${p.층수?`<span>${p.층수}${p.총층?'/'+p.총층:''}층</span>`:''}
+        ${p.방향?`<span>${p.방향}향</span>`:''}
+        <span>${priceLine}</span>
+        ${pp!==null?`<span>평단가 <b>${pp}</b>만</span>`:''}
+      </div>
+      ${p.메모?`<div class="memo">${p.메모}</div>`:''}
+      <div class="card-foot">
+        ${p.주소?`<a class="link-btn" href="${mapUrl(p.주소)}" target="_blank" rel="noopener">지도보기</a>`:''}
+        ${p.네이버번호?`<a class="link-btn" href="${articleUrl(p.네이버번호)}" target="_blank" rel="noopener">매물보기</a>`:''}
+        <button class="link-btn" data-edit="${p.매물ID}" style="flex:0 0 52px">수정</button>
+        <span class="fdate">${p.파밍일자||''}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════ 이벤트 ══════════════ */
+$('tabRoutine').onclick = ()=>{ state.tab='routine'; state.statusFilter='전체'; state.typeFilter='전체'; render(); };
+$('tabCust').onclick    = ()=>{ state.tab='cust';    state.statusFilter='전체'; state.typeFilter='전체'; render(); };
+$('custSelect') && ($('custBar').addEventListener('change', e=>{ if(e.target.id==='custSelect'){ state.custId=e.target.value; render(); } }));
+
+$('chips').addEventListener('click', e=>{
+  const b = e.target.closest('.chip'); if(!b) return;
+  if(b.dataset.status){ state.statusFilter = b.dataset.status; }
+  if(b.dataset.type){ state.typeFilter = state.typeFilter===b.dataset.type ? '전체' : b.dataset.type; }
+  render();
+});
+
+/* 스탬프 순환 + 수정 열기 */
+$('list').addEventListener('click', e=>{
+  const st = e.target.closest('[data-stamp]');
+  if(st){
+    const p = state.properties.find(x=>x.매물ID===st.dataset.stamp); if(!p) return;
+    const next = STATUS[(STATUS.indexOf(p.파밍여부)+1) % STATUS.length] || '파밍예정';
+    p.파밍여부 = next;
+    if(next==='파밍완료' && !p.파밍일자) p.파밍일자 = todayStr();
+    render();
+    post({action:'status', 매물ID:p.매물ID, 파밍여부:next, 파밍일자:p.파밍일자});
+    toast(next + ' 처리');
+    return;
+  }
+  const ed = e.target.closest('[data-edit]');
+  if(ed) openSheet(ed.dataset.edit);
+});
+
+/* ── 추가/수정 시트 ── */
+function openSheet(editId){
+  state.editId = editId || null;
+  const p = editId ? state.properties.find(x=>x.매물ID===editId) : null;
+  $('sheetTitle').textContent = p ? '매물 수정' : '매물 추가';
+  $('fNaver').value = p?.네이버번호||''; $('fName').value = p?.건물명||''; $('fAddr').value = p?.주소||'';
+  $('fType').value = p?.유형||'사무실'; $('fDeal').value = p?.거래유형||'월세';
+  $('fFloor').value = p?.층수||''; $('fFloorAll').value = p?.총층||''; $('fArea').value = p?.전용면적||'';
+  $('fDeposit').value = p?.보증금매매가||''; $('fRent').value = p?.월세||''; $('fMgmt').value = p?.관리비||'';
+  $('fDir').value = p?.방향||''; $('fMemo').value = p?.메모||'';
+  $('fCust').innerHTML = '<option value="">루틴 (배정 없음)</option>' +
+    state.customers.map(c=>`<option value="${c.고객ID}">${c.고객명}</option>`).join('');
+  $('fCust').value = p?.고객ID||(state.tab==='cust'?state.custId:'');
+  $('sheetBg').classList.add('show'); $('sheetAdd').classList.add('show');
+}
+function closeSheets(){ $('sheetBg').classList.remove('show'); $('sheetAdd').classList.remove('show'); $('sheetSet').classList.remove('show'); }
+$('fabAdd').onclick = ()=>openSheet();
+$('sheetBg').onclick = closeSheets;
+
+function nextPropertyId(){
+  let max = 0;
+  state.properties.forEach(p=>{
+    const m = /^F(\d+)$/.exec(p.매물ID||'');
+    if(m) max = Math.max(max, parseInt(m[1],10));
+  });
+  return 'F' + String(max+1).padStart(4,'0');
+}
+
+$('btnSave').onclick = ()=>{
+  const isEdit = !!state.editId;
+  const p = isEdit ? state.properties.find(x=>x.매물ID===state.editId)
+                   : {매물ID: nextPropertyId(), 파밍여부:'파밍예정', 파밍일자:'', 등록일:todayStr()};
+  Object.assign(p, {
+    네이버번호:$('fNaver').value.trim(), 건물명:$('fName').value.trim(), 주소:$('fAddr').value.trim(),
+    유형:$('fType').value, 거래유형:$('fDeal').value,
+    층수:$('fFloor').value.trim(), 총층:$('fFloorAll').value.trim(), 전용면적:$('fArea').value.trim(),
+    보증금매매가:$('fDeposit').value.trim(), 월세:$('fRent').value.trim(), 관리비:$('fMgmt').value.trim(),
+    방향:$('fDir').value, 메모:$('fMemo').value.trim(), 고객ID:$('fCust').value,
+  });
+  if(!p.주소 && !p.네이버번호){ toast('주소 또는 네이버번호를 입력하세요'); return; }
+  if(!isEdit) state.properties.unshift(p);
+  closeSheets(); render();
+  const localId = p.매물ID;
+  post({action: isEdit?'update':'add', property:p}).then(res=>{
+    if(res && res.ok && res.매물ID && res.매물ID!==localId){
+      p.매물ID = res.매물ID;  // 서버 채번 결과로 로컬 ID 동기화 (동시 입력 충돌 방지)
+      render();
+    }
+  });
+  toast(isEdit?'수정 완료':'매물 추가 완료');
+};
+
+/* ── 설정 ── */
+$('btnSettings').onclick = ()=>{ $('fApi').value = API_URL; $('sheetBg').classList.add('show'); $('sheetSet').classList.add('show'); };
+$('btnSaveApi').onclick = ()=>{
+  API_URL = $('fApi').value.trim();
+  try{ localStorage.setItem('fs_api', API_URL); }catch(e){}
+  closeSheets(); loadData(true);
+};
+$('btnRefresh').onclick = ()=>loadData(true);
+
+/* PWA 서비스워커 */
+if('serviceWorker' in navigator && location.protocol==='https:'){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+loadData();
+</script>
+</body>
+</html>
