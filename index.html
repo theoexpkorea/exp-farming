@@ -107,7 +107,8 @@ nav.tabs button.on.customer{background:var(--jeonse-bg);color:var(--jeonse);bord
 .sortpick-pop .opt.sel{color:var(--brand-2);font-weight:800}
 .sortpick-pop .opt .ck{color:var(--brand-2);font-weight:900;opacity:0;}
 .sortpick-pop .opt.sel .ck{opacity:1}
-.cond-chip{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:10px 13px;font-size:12.5px;color:var(--muted)}
+.cond-chip{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--jeonse-bg);border:1px solid #F3E4C5;border-radius:11px;padding:11px 13px;font-size:13px;font-weight:700;color:var(--jeonse)}
+.cond-chip:active{opacity:.85}
 .cond-chip b{color:var(--ink);font-size:13.5px}
 .cond-chip .more{margin-left:auto;color:var(--brand-2);font-weight:800;font-size:12px}
 
@@ -295,10 +296,9 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
     <button class="sortpick-btn" id="custPickBtn"><span id="custPickLabel">전체 고객</span><span class="car">▾</span></button>
     <div class="sortpick-pop" id="custPickPop"></div>
   </div>
-  <div class="cond-chip" id="condChip" style="display:none">
-    <span><b id="condName"></b> · <span id="condShort"></span></span>
-    <span class="more" id="condMore">조건보기</span>
-  </div>
+  <button class="cond-chip" id="condChip" style="display:none">
+    <span>📋 조건보기</span>
+  </button>
 </div>
 
 <div class="chips" id="chips"></div>
@@ -498,8 +498,6 @@ function render(){
     const c = state.customers.find(x=>x.고객ID===state.custId);
     if(c){
       $('condChip').style.display = 'flex';
-      $('condName').textContent = c.고객ID + ' · ' + c.고객명;
-      $('condShort').textContent = `${c.희망거래유형||'-'} · ${c.평수최소||'?'}~${c.평수최대||'?'}평`;
     } else {
       $('condChip').style.display = 'none';
     }
@@ -642,7 +640,7 @@ document.addEventListener('click', e=>{
     $('custPickBtn').classList.remove('open'); $('custPickPop').classList.remove('open');
   }
 });
-$('condMore').onclick = ()=>{ if(state.custId) openCustomerDetail(state.custId); };
+$('condChip').onclick = ()=>{ if(state.custId) openCustomerDetail(state.custId); };
 $('chips').addEventListener('click', e=>{
   const b = e.target.closest('.chip'); if(!b) return;
   state.statusFilter = b.dataset.status; render();
