@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta property="og:title" content="파밍서치 · eXp Korea">
-<meta property="og:description" content="파밍 매물 관리 시스템입니다.">
+<meta property="og:title" content="theo · 파밍 스캔">
+<meta property="og:description" content="필드에서 바로 쓰는 파밍 매물 관리 시스템입니다.">
 <meta property="og:image" content="https://theoexpkorea.github.io/exp-farming/og-image.png">
 <meta property="og:url" content="https://theoexpkorea.github.io/exp-farming/">
 <meta property="og:type" content="website">
@@ -22,6 +22,8 @@
   --sale:#1F7A4D; --sale-bg:#E7F4ED; --jeonse:#9A5B14; --jeonse-bg:#FBF1E2;
   --wolse:#2746E6; --wolse-bg:#EEF1FE; --chip:#F1F2F5;
   --danger:#E03A3A; --danger-bg:#FBEAEA;
+  --gray:#727A86; --gray-bg:#EEF0F3;
+  --brand:#143C28; --brand-2:#1F7A4D; --gold:#D9A441;
   --shadow:0 1px 2px rgba(20,24,32,.04),0 6px 16px rgba(20,24,32,.06);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -35,7 +37,17 @@ body{
   overscroll-behavior-y:none; padding-bottom:96px;
 }
 button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
-.tnum{font-variant-numeric:tabular-nums}
+
+/* ---- 스플래시 ---- */
+#splash{
+  position:fixed; inset:0; z-index:1000; background:var(--brand);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:opacity .35s ease; gap:6px;
+}
+#splash.hide{opacity:0; pointer-events:none}
+#splash .sp-logo{font-size:34px;font-weight:800;letter-spacing:-.04em;color:#fff}
+#splash .sp-logo .o{color:var(--gold)}
+#splash .sp-cap{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 32px);font-size:12px;letter-spacing:.14em;color:rgba(255,255,255,.55);font-weight:700}
 
 /* ---- 비밀번호 화면 ---- */
 #lockScreen{
@@ -44,126 +56,120 @@ button{font-family:inherit;border:none;background:none;cursor:pointer;color:inhe
   padding:32px 24px; padding-top:calc(env(safe-area-inset-top) + 32px);
 }
 #lockScreen .lock-logo{font-size:28px;font-weight:800;letter-spacing:-.04em;margin-bottom:6px;color:var(--ink)}
-#lockScreen .lock-logo .o{color:var(--accent)}
+#lockScreen .lock-logo .o{color:var(--brand-2)}
 #lockScreen .lock-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:40px}
 #lockScreen .lock-box{width:100%;max-width:320px;background:var(--surface);border-radius:18px;padding:28px 24px;box-shadow:var(--shadow);border:1px solid var(--line)}
 #lockScreen .lock-title{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:16px;text-align:center}
 #lockScreen .lock-input{width:100%;height:52px;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:0 16px;font-size:20px;font-family:inherit;text-align:center;letter-spacing:6px;outline:0;color:var(--ink);font-variant-numeric:tabular-nums;margin-bottom:12px}
-#lockScreen .lock-input:focus{border-color:var(--accent);background:#fff}
-#lockScreen .lock-btn{width:100%;height:52px;border:0;border-radius:13px;background:var(--ink);color:#fff;font-size:15.5px;font-weight:800;cursor:pointer;font-family:inherit;transition:.12s}
+#lockScreen .lock-input:focus{border-color:var(--brand-2);background:#fff}
+#lockScreen .lock-btn{width:100%;height:52px;border:0;border-radius:13px;background:var(--brand-2);color:#fff;font-size:15.5px;font-weight:800;cursor:pointer;font-family:inherit;transition:.12s}
 #lockScreen .lock-btn:active{opacity:.85}
 #lockScreen .lock-err{font-size:13px;font-weight:700;color:var(--danger);text-align:center;margin-top:10px;min-height:20px}
 
 /* ---- 헤더 ---- */
-header{
-  background:var(--surface); border-bottom:1px solid var(--line);
-  padding:calc(env(safe-area-inset-top) + 12px) 16px 0;
-  position:sticky; top:0; z-index:30;
-}
+header{background:var(--surface); border-bottom:1px solid var(--line); padding:calc(env(safe-area-inset-top) + 12px) 16px 0; position:sticky; top:0; z-index:30}
 .head-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.brand{display:flex;align-items:baseline;gap:8px}
-.brand .logo{font-size:21px;font-weight:800;letter-spacing:-.04em;margin:0;color:var(--ink);line-height:1;cursor:pointer}
-.brand .logo .o{color:var(--accent)}
+.brand{display:flex;align-items:baseline;gap:8px;cursor:pointer}
+.brand .logo{font-size:20px;font-weight:800;letter-spacing:-.04em;margin:0;color:var(--ink);line-height:1}
+.brand .logo .o{color:var(--brand-2)}
 .brand .by{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.02em}
 .head-actions{display:flex;gap:6px}
-.icon-btn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);color:var(--muted)}
-.icon-btn:active{background:var(--line-2);color:var(--accent)}
+.icon-btn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);color:var(--muted);font-size:15px}
+.icon-btn:active{background:var(--line-2);color:var(--brand-2)}
 .icon-btn.spin svg{animation:spin .8s linear infinite}
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 
-.routine{
-  margin-top:12px; display:flex; gap:14px; align-items:center;
-  background:var(--chip); border-radius:11px; padding:9px 12px; font-size:13px; color:var(--muted); font-weight:600;
-}
-.routine b{color:var(--ink);font-variant-numeric:tabular-nums}
-.routine .done{color:var(--accent)}
-.routine .done-msg{margin-left:auto;color:var(--accent);font-weight:800;font-size:12.5px}
+/* ---- 날짜 바 ---- */
+.datebar{display:flex;align-items:center;gap:8px;margin-top:12px}
+.datebar .navbtn{width:32px;height:32px;border-radius:9px;background:var(--chip);color:var(--muted);display:grid;place-items:center;flex:none;font-size:15px}
+.datebar .navbtn:active{background:var(--line-2)}
+.datebar .datepill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--brand);color:#fff;border-radius:11px;padding:10px 10px;font-weight:800;font-size:14.5px;letter-spacing:-.01em}
+.datebar .datepill .wd{font-weight:700;opacity:.75;font-size:12.5px}
+.datebar .todaybtn{flex:none;font-size:12px;font-weight:800;color:var(--brand-2);background:var(--sale-bg);padding:9px 11px;border-radius:9px}
 
-nav.tabs{display:flex;gap:7px;overflow-x:auto;padding:12px 0 12px;margin:0;scrollbar-width:none}
-nav.tabs::-webkit-scrollbar{display:none}
-nav.tabs button{
-  flex:none; border:1px solid var(--line); background:var(--surface); color:var(--muted);
-  font-size:13.5px; font-weight:700; letter-spacing:-.01em; padding:8px 15px; border-radius:999px;
-}
-nav.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.todaybar{margin-top:9px;display:flex;align-items:center;gap:8px;background:var(--chip);border-radius:10px;padding:8px 12px;font-size:12.5px;color:var(--muted);font-weight:600}
+.todaybar b{color:var(--brand-2);font-variant-numeric:tabular-nums;font-size:13.5px}
 
-/* ---- 고객바 ---- */
-.cust-bar{padding:12px 16px 0;display:none}
-.cust-bar select{
-  width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px;
-  background:var(--surface); font-weight:700; color:var(--ink); appearance:none; font-family:inherit; font-size:14.5px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23727A86' stroke-width='2' fill='none'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 14px center;
+/* ---- 스코프 탭 ---- */
+nav.tabs{display:flex;gap:7px;padding:12px 0 12px;margin:0}
+nav.tabs button{flex:1;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px;font-weight:800;letter-spacing:-.01em;padding:9px 6px;border-radius:11px;text-align:center}
+nav.tabs button.on.all{background:var(--brand);color:#fff;border-color:var(--brand)}
+nav.tabs button.on.routine{background:var(--sale-bg);color:var(--sale);border-color:var(--sale-bg)}
+nav.tabs button.on.customer{background:var(--jeonse-bg);color:var(--jeonse);border-color:var(--jeonse-bg)}
+
+/* ---- 고객 선택 ---- */
+.cust-bar{padding:0 16px 0;display:none;gap:8px;flex-direction:column}
+.cust-select-wrap{position:relative}
+.cust-select-wrap select{
+  width:100%; padding:11px 40px 11px 14px; border:1px solid var(--line); border-radius:11px;
+  background:var(--surface); font-weight:700; color:var(--ink); appearance:none; font-family:inherit; font-size:13.5px;
 }
-.cond{
-  margin:8px 16px 0; background:var(--surface); border:1.5px dashed var(--line); border-radius:12px;
-  padding:10px 14px; font-size:12.5px; color:var(--muted); display:none; line-height:1.65;
-}
-.cond.show{display:block}
-.cond b{color:var(--ink)}
+.cust-select-wrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;pointer-events:none}
+.cond-chip{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:10px 13px;font-size:12.5px;color:var(--muted)}
+.cond-chip b{color:var(--ink);font-size:13.5px}
+.cond-chip .more{margin-left:auto;color:var(--brand-2);font-weight:800;font-size:12px}
 
 /* ---- 필터 칩 ---- */
 .chips{display:flex;gap:7px;overflow-x:auto;padding:12px 16px 4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:none;padding:7px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
+.chip{flex:none;padding:7px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:12.5px;font-weight:700;color:var(--muted);white-space:nowrap}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.chip .n{opacity:.65;font-size:12px;margin-left:3px;font-variant-numeric:tabular-nums}
+.chip .n{opacity:.65;font-size:11.5px;margin-left:3px;font-variant-numeric:tabular-nums}
 
-/* ---- 데모/오프라인 배너 ---- */
 .banner{margin:12px 16px 0;background:var(--jeonse-bg);color:var(--jeonse);border-radius:10px;padding:9px 12px;font-size:12.5px;font-weight:600;display:none}
 .banner.show{display:block}
 
 /* ---- 카드 ---- */
 main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 15px 12px;box-shadow:var(--shadow)}
+.card{border-radius:14px;padding:13px 14px 12px;box-shadow:var(--shadow);border:1px solid var(--line);background:var(--surface)}
+.card.st-s0{background:#FBFCFF;border-color:#E4E9FB}
+.card.st-s1{background:#F6FBF7;border-color:#DCEEE1}
+.card.st-s2{background:#FEFAF3;border-color:#F3E4C5}
+.card.st-s3{background:#F7F8F9;border-color:var(--line)}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
-.tag{font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:7px;letter-spacing:-.01em;background:#F0F1F4;color:#3B414C}
+.idrow{display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.idchip{font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:6px;background:#EEF0F3;color:#5B6472;font-family:ui-monospace,"SF Mono",monospace;letter-spacing:0}
+.idchip.cust{background:var(--jeonse-bg);color:var(--jeonse)}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+.tag{font-size:11px;font-weight:800;padding:3px 7px;border-radius:7px;letter-spacing:-.01em;background:#F0F1F4;color:#3B414C}
 .tag.deal.월세{background:var(--wolse-bg);color:var(--wolse)}
 .tag.deal.전세{background:var(--jeonse-bg);color:var(--jeonse)}
 .tag.deal.매매{background:var(--sale-bg);color:var(--sale)}
 .tag.deal.단기임대{background:#E9EDF5;color:#5A6B86}
-.tag.fit-ok{background:var(--sale-bg);color:var(--sale)}
-.tag.fit-check{background:var(--jeonse-bg);color:var(--jeonse)}
-.tag.fit-no{background:var(--danger-bg);color:var(--danger)}
-.bname{font-size:16.5px;font-weight:800;letter-spacing:-.02em}
-.addr{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.4}
-.specs{margin-top:8px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
-.specs b{color:var(--ink);font-weight:800;font-variant-numeric:tabular-nums}
-.specs .pyung{font-weight:800;color:var(--ink)}
-.memo{margin-top:7px;font-size:12.5px;color:var(--muted);background:var(--bg);border-radius:8px;padding:7px 10px}
-.card-foot{display:flex;align-items:center;gap:8px;margin-top:11px}
-.link-btn{
-  flex:1; text-align:center; padding:9px 0; border-radius:9px; font-size:12.5px; font-weight:700;
-  text-decoration:none; border:1.5px solid var(--line); color:var(--muted); background:var(--surface);
-}
-.link-btn:active{background:var(--line-2)}
-.fdate{font-size:11px;color:#aab0ba;margin-left:auto;flex:none;font-variant-numeric:tabular-nums}
-.stamp{flex:none;min-width:82px;padding:8px 10px;border-radius:9px;font-weight:800;font-size:13px;border:1.5px solid;letter-spacing:-.01em;transition:transform .08s}
+.tag.fit-적합{background:var(--sale-bg);color:var(--sale)}
+.tag.fit-적합_예산확인{background:var(--jeonse-bg);color:var(--jeonse)}
+.tag.fit-조건미달{background:var(--danger-bg);color:var(--danger)}
+.tag.fit-고객정보없음{background:var(--gray-bg);color:var(--gray)}
+.bname{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.addr{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
+.farmdate{display:flex;align-items:center;gap:5px;margin-top:8px;font-size:12.5px;font-weight:800;color:var(--brand-2)}
+.farmdate .dot{width:6px;height:6px;border-radius:50%;background:var(--brand-2)}
+.specs{margin-top:7px;font-size:12.5px;color:var(--muted);display:grid;grid-template-columns:1fr 1fr;gap:5px 10px}
+.specs .item b{color:var(--ink);font-weight:800;font-variant-numeric:tabular-nums;font-size:13px}
+.specs .pyung{grid-column:1/-1;font-weight:800;color:var(--ink);font-size:13.5px}
+.memo{margin-top:7px;font-size:12px;color:var(--muted);background:var(--bg);border-radius:8px;padding:7px 10px}
+.stamp{flex:none;min-width:76px;padding:7px 9px;border-radius:9px;font-weight:800;font-size:12.5px;border:1.5px solid;letter-spacing:-.01em;transition:transform .08s;text-align:center}
 .stamp:active{transform:scale(.94)}
 .stamp.s0{color:var(--wolse);border-color:var(--wolse);background:var(--wolse-bg)}
 .stamp.s1{color:var(--sale);border-color:var(--sale);background:var(--sale-bg)}
 .stamp.s2{color:var(--jeonse);border-color:var(--jeonse);background:var(--jeonse-bg)}
+.stamp.s3{color:var(--gray);border-color:var(--gray);background:var(--gray-bg)}
+.card-foot{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:11px}
+.link-btn{text-align:center;padding:8px 2px;border-radius:9px;font-size:11.5px;font-weight:700;text-decoration:none;border:1.5px solid var(--line);color:var(--muted);background:var(--surface);display:flex;flex-direction:column;align-items:center;gap:2px}
+.link-btn:active{background:var(--line-2)}
+.link-btn.del{color:var(--danger);border-color:#F3D3D3}
+.link-btn.del:active{background:var(--danger-bg)}
+.link-btn .ic{font-size:15px}
 .empty{text-align:center;padding:64px 24px;color:var(--muted)}
 .empty .em-t{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px}
 .empty .em-s{font-size:13px}
 
 /* ---- FAB & 시트 ---- */
-.fab{
-  position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:40;
-  background:var(--ink);color:#fff;font-weight:800;font-size:14.5px;
-  padding:15px 22px;border-radius:999px;box-shadow:0 6px 18px rgba(20,24,32,.28);
-  display:flex;align-items:center;gap:7px;
-}
+.fab{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:40;background:var(--brand-2);color:#fff;font-weight:800;font-size:14px;padding:15px 22px;border-radius:999px;box-shadow:0 6px 18px rgba(31,122,77,.35);display:flex;align-items:center;gap:7px}
 .fab:active{transform:scale(.96)}
 .scrim{position:fixed;inset:0;background:rgba(15,18,24,.42);z-index:50;display:none}
 .scrim.on{display:block}
-.sheet{
-  position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--surface);
-  border-radius:20px 20px 0 0;max-height:88vh;overflow-y:auto;
-  transform:translateY(105%);transition:transform .25s ease;
-  padding:6px 18px calc(24px + env(safe-area-inset-bottom));
-}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--surface);border-radius:20px 20px 0 0;max-height:88vh;overflow-y:auto;transform:translateY(105%);transition:transform .25s ease;padding:6px 18px calc(24px + env(safe-area-inset-bottom))}
 .sheet.on{transform:translateY(0)}
 .sheet-grip{width:38px;height:4px;background:#D9DCE1;border-radius:3px;margin:10px auto 14px}
 .sheet h2{font-size:16px;font-weight:800;margin:0 0 14px}
@@ -171,36 +177,69 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 .f-row>*{flex:1}
 .f-group{margin-bottom:12px}
 .f-group label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:5px}
-.f-group input,.f-group select,.f-group textarea{
-  width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);
-  font-family:inherit;font-size:14.5px;color:var(--ink);outline:0;
-}
-.f-group textarea{resize:none;height:64px}
-.f-group input:focus,.f-group select:focus,.f-group textarea:focus{border-color:var(--accent);background:#fff}
+.f-group input,.f-group select,.f-group textarea{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-family:inherit;font-size:14.5px;color:var(--ink);outline:0}
+.f-group textarea{resize:none;height:60px}
+.f-group input:focus,.f-group select:focus,.f-group textarea:focus{border-color:var(--brand-2);background:#fff}
 .hint{font-size:11.5px;color:#9aa1ab;margin-top:4px}
-.submit{width:100%;padding:15px;border-radius:13px;background:var(--ink);color:#fff;font-weight:800;font-size:15.5px;margin-top:6px}
+.submit{width:100%;padding:15px;border-radius:13px;background:var(--brand-2);color:#fff;font-weight:800;font-size:15.5px;margin-top:6px}
 .submit:active{opacity:.9}
+.seg{display:flex;background:var(--chip);border-radius:11px;padding:4px;margin-bottom:14px}
+.seg button{flex:1;padding:9px 0;border-radius:8px;font-weight:800;font-size:13.5px;color:var(--muted)}
+.seg button.on.routine{background:var(--surface);color:var(--sale);box-shadow:var(--shadow)}
+.seg button.on.customer{background:var(--surface);color:var(--jeonse);box-shadow:var(--shadow)}
 
-.toast{
-  position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);
-  background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:13.5px;font-weight:700;
-  opacity:0;transition:.25s;z-index:70;pointer-events:none;white-space:nowrap;
-}
+/* ---- 고객상세 모달 ---- */
+.modal-scrim{position:fixed;inset:0;background:rgba(15,18,24,.5);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-scrim.on{display:flex}
+.modal{width:100%;max-width:360px;background:var(--surface);border-radius:18px;padding:20px;max-height:80vh;overflow-y:auto}
+.modal .m-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.modal .m-title{font-size:16px;font-weight:800}
+.modal .m-close{width:28px;height:28px;border-radius:50%;background:var(--chip);display:grid;place-items:center;color:var(--muted)}
+.crow{display:flex;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:13px;gap:10px}
+.crow:last-child{border-bottom:0}
+.crow .ck{flex:none;width:98px;color:var(--muted);font-weight:700}
+.crow .cv{flex:1;color:var(--ink);font-weight:600;line-height:1.5}
+
+/* ---- 고객 리스트(전체보기) ---- */
+.custlist-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.custlist-item .cn{font-weight:800;font-size:14.5px}
+.custlist-item .cs{font-size:12px;color:var(--muted);margin-top:3px}
+
+/* ---- 캘린더 팝업 ---- */
+.cal-scrim{position:fixed;inset:0;background:rgba(15,18,24,.5);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+.cal-scrim.on{display:flex}
+.cal-box{width:100%;max-width:340px;background:var(--surface);border-radius:18px;padding:18px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-head .cm-title{font-weight:800;font-size:15px}
+.cal-head button{width:30px;height:30px;border-radius:9px;background:var(--chip);color:var(--muted)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-wd{text-align:center;font-size:11px;color:var(--muted);font-weight:700;padding:4px 0}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:9px;font-size:13px;font-weight:700;color:var(--ink);position:relative}
+.cal-day.mute{color:#C7CCD3}
+.cal-day.today{outline:1.5px solid var(--brand-2)}
+.cal-day.sel{background:var(--brand);color:#fff}
+.cal-day .dot{width:4px;height:4px;border-radius:50%;background:var(--brand-2);position:absolute;bottom:5px}
+.cal-day.sel .dot{background:#fff}
+
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:13.5px;font-weight:700;opacity:0;transition:.25s;z-index:70;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 
-<!-- 비밀번호 잠금 화면 -->
+<div id="splash">
+  <div class="sp-logo">the<span class="o">o</span></div>
+  <div class="sp-cap">FARMING SEARCH</div>
+</div>
+
 <div id="lockScreen">
   <div class="lock-logo">the<span class="o">o</span></div>
   <div class="lock-sub">파밍서치 · eXp Korea</div>
   <div class="lock-box">
-    <div class="lock-title">🔒 비밀번호를 입력하세요</div>
+    <div class="lock-title">비밀번호를 입력하세요</div>
     <input id="lockInput" class="lock-input" type="password" name="pin-code-not-a-password"
-      inputmode="numeric" maxlength="8" placeholder=""
-      autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
+      inputmode="numeric" maxlength="8" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
     <button class="lock-btn" id="lockBtn">확인</button>
     <div class="lock-err" id="lockErr"></div>
   </div>
@@ -208,54 +247,72 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 
 <header>
   <div class="head-row">
-    <div class="brand">
-      <span class="logo" id="logoReset">the<span class="o">o</span></span>
-      <span class="by">파밍서치</span>
+    <div class="brand" id="logoReset">
+      <span class="logo">the<span class="o">o</span></span>
+      <span class="by">파밍서치 · eXp Korea</span>
     </div>
     <div class="head-actions">
+      <button class="icon-btn" id="btnCustList" title="고객조건 보기">👤</button>
       <button class="icon-btn" id="btnRefresh" title="새로고침">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
       </button>
     </div>
   </div>
-  <div class="routine">
-    <span>오늘 루틴</span>
-    <span>상가 <b id="rtSanga">0</b>/1</span>
-    <span>사무실 <b id="rtOffice">0</b>/1</span>
-    <span class="done-msg" id="rtMsg"></span>
+
+  <div class="datebar">
+    <button class="navbtn" id="datePrev">‹</button>
+    <button class="datepill" id="dateOpen"><span class="wd" id="dateWd"></span><span id="dateMain"></span></button>
+    <button class="navbtn" id="dateNext">›</button>
+    <button class="todaybtn" id="dateToday" style="display:none">오늘</button>
   </div>
+  <div class="todaybar">오늘 파밍 <b id="todayCount">0</b>건</div>
+
   <nav class="tabs">
-    <button id="tabRoutine" class="on">루틴 파밍</button>
-    <button id="tabCust">고객 파밍</button>
+    <button id="tabAll" class="on all">전체파밍</button>
+    <button id="tabRoutine" class="routine">루틴파밍</button>
+    <button id="tabCust" class="customer">고객파밍</button>
   </nav>
 </header>
 
 <div class="banner" id="demoBanner">서버 연결이 원활하지 않습니다 — 마지막으로 불러온 데이터를 표시합니다.</div>
 
 <div class="cust-bar" id="custBar">
-  <select id="custSelect"></select>
-  <div class="cond" id="condBox"></div>
+  <div class="cust-select-wrap"><select id="custSelect"></select></div>
+  <div class="cond-chip" id="condChip" style="display:none">
+    <span>👤 <b id="condName"></b> · <span id="condShort"></span></span>
+    <span class="more" id="condMore">조건보기</span>
+  </div>
 </div>
 
 <div class="chips" id="chips"></div>
-
 <main id="list"></main>
-
 <button class="fab" id="fabAdd">＋ 매물 추가</button>
 
+<!-- 매물 추가/수정 -->
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheetAdd">
   <div class="sheet-grip"></div>
   <h2 id="sheetTitle">매물 추가</h2>
+  <div class="seg" id="segScope">
+    <button data-v="routine" class="routine">루틴 파밍</button>
+    <button data-v="customer" class="customer">고객 파밍</button>
+  </div>
+  <div class="f-group" id="custPickWrap" style="display:none">
+    <label>고객 배정</label>
+    <select id="fCust"></select>
+  </div>
   <div class="f-group">
-    <label>네이버 매물번호</label>
-    <input id="fNaver" inputmode="numeric" placeholder="예: 2636492527">
-    <div class="hint">번호만 붙여넣으면 매물보기 링크가 자동 생성됩니다</div>
+    <label>파밍일자</label>
+    <input id="fDate" type="date">
+  </div>
+  <div class="f-group">
+    <label>매물 링크</label>
+    <input id="fLink" placeholder="네이버 매물번호 또는 전체 URL(디스코·밸류맵 등)">
+    <div class="hint">숫자만 입력하면 네이버부동산 링크로 자동 변환됩니다</div>
   </div>
   <div class="f-group"><label>건물명</label><input id="fName" placeholder="예: 동양섬유사옥"></div>
   <div class="f-group">
     <label>주소</label><input id="fAddr" placeholder="예: 서울특별시 중구 신당동 421-5">
-    <div class="hint">주소 입력 시 네이버지도 링크 자동 생성</div>
   </div>
   <div class="f-row">
     <div class="f-group"><label>유형</label>
@@ -275,46 +332,72 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
     <div class="f-group"><label>월세(만)</label><input id="fRent" inputmode="numeric" placeholder="400"></div>
     <div class="f-group"><label>관리비(만)</label><input id="fMgmt" inputmode="numeric" placeholder="225"></div>
   </div>
-  <div class="f-row">
-    <div class="f-group"><label>방향</label>
-      <select id="fDir"><option value="">-</option><option>동</option><option>서</option><option>남</option><option>북</option><option>남동</option><option>남서</option><option>북동</option><option>북서</option></select>
-    </div>
-    <div class="f-group"><label>고객 배정</label><select id="fCust"><option value="">루틴 (배정 없음)</option></select></div>
-  </div>
   <div class="f-group"><label>특징/메모</label><textarea id="fMemo" placeholder="주차 가능, 컨디션 양호 등"></textarea></div>
   <button class="submit" id="btnSave">저장</button>
+</div>
+
+<!-- 캘린더 -->
+<div class="cal-scrim" id="calScrim">
+  <div class="cal-box">
+    <div class="cal-head">
+      <button id="calPrev">‹</button>
+      <span class="cm-title" id="calTitle"></span>
+      <button id="calNext">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+</div>
+
+<!-- 고객 상세 모달 -->
+<div class="modal-scrim" id="custModalScrim">
+  <div class="modal">
+    <div class="m-head"><span class="m-title" id="cmTitle">고객 조건</span><button class="m-close" id="cmClose">✕</button></div>
+    <div id="cmBody"></div>
+  </div>
+</div>
+
+<!-- 고객 전체 리스트 -->
+<div class="scrim" id="scrimCustList"></div>
+<div class="sheet" id="sheetCustList">
+  <div class="sheet-grip"></div>
+  <h2>고객조건 보기</h2>
+  <div id="custListBody"></div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-/* ===================== 설정 (CONFIG) =====================
-   여기 한 줄만 바꾸면 됨.
-   DATA_URL : Apps Script 배포 후 나온 .../exec 주소
-   ※ 비밀번호는 구글 시트 [비번] 탭 A1셀에서 관리 (탭 없으면 잠금화면 없음)
-   ========================================================= */
 const CONFIG = {
   DATA_URL: "https://script.google.com/macros/s/AKfycbzzJs4Y8_iNMYtXQjcBmKCgJkHrAR2YvFFAKJI4Xx0ujgjLkbIZGvXcWeM5B1WPN7kD/exec"
 };
-
-const STATUS = ['파밍예정','파밍완료','파밍보류'];
-const STATUS_CLASS = {'파밍예정':'s0','파밍완료':'s1','파밍보류':'s2'};
+const STATUS = ['파밍예정','파밍완료','파밍보류','파밍취소'];
+const STATUS_CLASS = {'파밍예정':'s0','파밍완료':'s1','파밍보류':'s2','파밍취소':'s3'};
+const WD = ['일','월','화','수','목','금','토'];
 
 let state = {
-  tab: 'routine', custId: '', statusFilter: '전체', typeFilter: '전체',
-  customers: [], properties: [], editId: null,
+  date: null, scope: 'all', custId: '', statusFilter: '전체',
+  customers: [], properties: [], editId: null, calViewMonth: null,
 };
 
-const DATA_CACHE_KEY = 'farming_data_cache';
 const $ = id => document.getElementById(id);
 const todayStr = () => new Date().toISOString().slice(0,10);
 const num = v => { const n = parseFloat(String(v).replace(/,/g,'')); return isNaN(n) ? null : n; };
 const fmt = v => { const n = num(v); return n===null ? '-' : n.toLocaleString('ko-KR'); };
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 function mapUrl(addr){ return 'https://map.naver.com/p/search/' + encodeURIComponent(addr); }
-function articleUrl(no){ return 'https://fin.land.naver.com/articles/' + no; }
+function propLinkUrl(v){
+  if(!v) return '';
+  const s = String(v).trim();
+  if(/^\d+$/.test(s)) return 'https://fin.land.naver.com/articles/' + s;
+  if(/^https?:\/\//.test(s)) return s;
+  return '';
+}
+function fmtDateDisplay(d){
+  const dt = new Date(d + 'T00:00:00');
+  return (dt.getMonth()+1) + '월 ' + dt.getDate() + '일';
+}
 
-/* ===== JSONP 헬퍼 (매물뷰와 동일 방식 — Apps Script는 fetch로 응답을 못 읽는 경우가 있어 스크립트태그 사용) ===== */
+/* ===== JSONP ===== */
 function jsonp(params, timeoutMs){
   return new Promise((resolve, reject)=>{
     const cb = "__fs_cb_" + Date.now() + "_" + Math.floor(Math.random()*100000);
@@ -335,31 +418,8 @@ async function jsonpRetry(params, timeoutMs){
   catch(e){ await new Promise(r=>setTimeout(r,800)); return await jsonp(params, timeoutMs); }
 }
 
-/* ===== 계산 로직 (엑셀 수식 포팅) ===== */
-function pyungPrice(p){
-  const area = num(p.전용면적); if(!area) return null;
-  const base = (p.거래유형==='월세'||p.거래유형==='단기임대') ? num(p.월세) : num(p.보증금매매가);
-  if(base===null) return null;
-  return Math.round(base/area*10)/10;
-}
-function fitness(p, c){
-  if(!c || !num(p.전용면적) || !p.거래유형) return null;
-  if(c.희망거래유형 && c.희망거래유형!=='무관' && c.희망거래유형!==p.거래유형) return '조건미달';
-  const area = num(p.전용면적), aMin = num(c.평수최소), aMax = num(c.평수최대);
-  if(aMin!==null && area<aMin) return '조건미달';
-  if(aMax!==null && area>aMax) return '조건미달';
-  const bDep = num(c.예산보증금), bRent = num(c.예산월세);
-  let needCheck = false;
-  if(bDep!==null){ if(num(p.보증금매매가)!==null && num(p.보증금매매가)>bDep) return '조건미달'; }
-  else needCheck = true;
-  if(p.거래유형==='월세'||p.거래유형==='단기임대'){
-    if(bRent!==null){ if(num(p.월세)!==null && num(p.월세)>bRent) return '조건미달'; }
-    else needCheck = true;
-  }
-  return needCheck ? '적합(예산확인)' : '적합';
-}
-
 /* ===== 데이터 로드 ===== */
+const DATA_CACHE_KEY = 'farming_data_cache_v2';
 async function loadData(showToast){
   try{
     const d = await jsonpRetry({mode:'data'});
@@ -378,164 +438,235 @@ async function loadData(showToast){
   }
 }
 
-/* ===== 렌더 ===== */
-function visibleProps(){
-  return state.properties.filter(p=>{
-    const isRoutine = !p.고객ID;
-    if(state.tab==='routine' && !isRoutine) return false;
-    if(state.tab==='cust' && (isRoutine || (state.custId && p.고객ID!==state.custId))) return false;
-    if(state.statusFilter!=='전체' && p.파밍여부!==state.statusFilter) return false;
-    if(state.typeFilter!=='전체' && p.유형!==state.typeFilter) return false;
-    return true;
-  });
+/* ===== 필터 ===== */
+function scopeMatch(p){
+  if(state.scope==='routine') return !p.고객ID;
+  if(state.scope==='customer') return !!p.고객ID && (!state.custId || p.고객ID===state.custId);
+  return true;
 }
+function dateMatch(p){ return p.파밍일자 === state.date; }
+function statusMatch(p){ return state.statusFilter==='전체' || p.파밍여부===state.statusFilter; }
+function visibleProps(){ return state.properties.filter(p=>scopeMatch(p) && dateMatch(p) && statusMatch(p)); }
 
+/* ===== 렌더 ===== */
 function render(){
-  const today = todayStr();
-  const todayRoutine = state.properties.filter(p=>!p.고객ID && (p.파밍일자===today || p.등록일===today));
-  const s = todayRoutine.filter(p=>p.유형==='상가').length;
-  const o = todayRoutine.filter(p=>p.유형==='사무실').length;
-  $('rtSanga').textContent = s; $('rtOffice').textContent = o;
-  $('rtSanga').className = s>=1?'done':''; $('rtOffice').className = o>=1?'done':'';
-  $('rtMsg').textContent = (s>=1&&o>=1) ? '오늘 루틴 완료 ✓' : '';
+  const dt = new Date(state.date + 'T00:00:00');
+  $('dateWd').textContent = WD[dt.getDay()] + '요일';
+  $('dateMain').textContent = dt.getFullYear() + '.' + String(dt.getMonth()+1).padStart(2,'0') + '.' + String(dt.getDate()).padStart(2,'0');
+  $('dateToday').style.display = state.date === todayStr() ? 'none' : 'block';
+  $('todayCount').textContent = state.properties.filter(p=>p.파밍일자===todayStr()).length;
 
-  $('tabRoutine').classList.toggle('on', state.tab==='routine');
-  $('tabCust').classList.toggle('on', state.tab==='cust');
-  $('custBar').style.display = state.tab==='cust' ? 'block' : 'none';
+  $('tabAll').classList.toggle('on', state.scope==='all');
+  $('tabRoutine').classList.toggle('on', state.scope==='routine');
+  $('tabCust').classList.toggle('on', state.scope==='customer');
+  $('custBar').style.display = state.scope==='customer' ? 'flex' : 'none';
 
-  if(state.tab==='cust'){
+  if(state.scope==='customer'){
     const sel = $('custSelect');
     sel.innerHTML = '<option value="">전체 고객</option>' +
-      state.customers.map(c=>`<option value="${c.고객ID}" ${c.고객ID===state.custId?'selected':''}>${c.고객명}</option>`).join('');
+      state.customers.map(c=>`<option value="${c.고객ID}" ${c.고객ID===state.custId?'selected':''}>${c.고객ID} · ${c.고객명}</option>`).join('');
     const c = state.customers.find(x=>x.고객ID===state.custId);
-    const box = $('condBox');
     if(c){
-      box.className='cond show';
-      box.innerHTML = `<b>${c.고객명}</b> · ${c.희망지역||'-'} · ${c.희망거래유형||'-'}
-        · <b>${c.평수최소||'?'}~${c.평수최대||'?'}평</b>
-        · 보증금 ${c.예산보증금||'-'} / 월세 ${c.예산월세||'-'}
-        ${c.기타요청 ? '<br>· '+c.기타요청 : ''}`;
-    } else box.className='cond';
+      $('condChip').style.display = 'flex';
+      $('condName').textContent = c.고객ID + ' · ' + c.고객명;
+      $('condShort').textContent = `${c.희망거래유형||'-'} · ${c.평수최소||'?'}~${c.평수최대||'?'}평`;
+    } else {
+      $('condChip').style.display = 'none';
+    }
   }
 
-  const props = state.properties.filter(p=> state.tab==='routine' ? !p.고객ID : !!p.고객ID && (!state.custId || p.고객ID===state.custId));
-  const cnt = st => props.filter(p=>p.파밍여부===st).length;
-  const types = [...new Set(props.map(p=>p.유형).filter(Boolean))];
-  let chips = ['전체', ...STATUS].map(st=>{
-    const n = st==='전체' ? props.length : cnt(st);
+  const scopedForCount = state.properties.filter(p=>scopeMatch(p) && dateMatch(p));
+  const cnt = st => scopedForCount.filter(p=>p.파밍여부===st).length;
+  $('chips').innerHTML = ['전체', ...STATUS].map(st=>{
+    const n = st==='전체' ? scopedForCount.length : cnt(st);
     return `<button class="chip ${state.statusFilter===st?'on':''}" data-status="${st}">${st}<span class="n">${n}</span></button>`;
   }).join('');
-  chips += types.map(t=>`<button class="chip ${state.typeFilter===t?'on':''}" data-type="${t}">${t}</button>`).join('');
-  $('chips').innerHTML = chips;
 
   const list = visibleProps();
-  const cust = state.customers.find(x=>x.고객ID===state.custId);
   if(!list.length){
-    $('list').innerHTML = `<div class="empty"><div class="em-t">표시할 매물이 없습니다</div><div class="em-s">아래 ＋ 버튼으로 파밍 매물을 추가하세요</div></div>`;
+    $('list').innerHTML = `<div class="empty"><div class="em-t">이 날짜엔 파밍 매물이 없습니다</div><div class="em-s">아래 ＋ 버튼으로 매물을 추가하세요</div></div>`;
     return;
   }
   $('list').innerHTML = list.map(p=>{
-    const pp = pyungPrice(p);
-    const fitC = state.tab==='cust'
-      ? fitness(p, state.custId ? cust : state.customers.find(x=>x.고객ID===p.고객ID))
-      : null;
-    const fitTag = fitC ? `<span class="tag ${fitC==='적합'?'fit-ok':fitC==='조건미달'?'fit-no':'fit-check'}">${fitC}</span>` : '';
-    const custName = (state.tab==='cust' && !state.custId)
-      ? (state.customers.find(x=>x.고객ID===p.고객ID)||{}).고객명 : '';
+    const fit = p.적합여부;
+    const fitClass = fit ? 'fit-' + fit.replace(/[()]/g,'').replace(/\s/g,'_') : '';
     const priceLine = (p.거래유형==='월세'||p.거래유형==='단기임대')
-      ? `보증금 <b>${fmt(p.보증금매매가)}</b> · 월 <b>${fmt(p.월세)}</b>${num(p.관리비)!==null?` · 관리 <b>${fmt(p.관리비)}</b>`:''}`
-      : `${p.거래유형==='매매'?'매매가':'보증금'} <b>${fmt(p.보증금매매가)}</b>`;
-    return `<div class="card">
+      ? `보증금/월세` : (p.거래유형==='매매'?'매매가':'보증금');
+    const link = propLinkUrl(p.매물링크);
+    return `<div class="card ${STATUS_CLASS[p.파밍여부]?'st-'+STATUS_CLASS[p.파밍여부]:'st-s0'}">
+      <div class="idrow">
+        <span class="idchip">${p.매물ID||''}</span>
+        ${p.고객ID?`<span class="idchip cust">${p.고객ID}</span>`:''}
+      </div>
       <div class="card-top">
         <div style="min-width:0">
           <div class="tags">
-            ${p.유형?`<span class="tag">${p.유형}</span>`:''}
             ${p.거래유형?`<span class="tag deal ${p.거래유형}">${p.거래유형}</span>`:''}
-            ${custName?`<span class="tag">${custName}</span>`:''}
-            ${fitTag}
+            ${fit?`<span class="tag ${fitClass}">${fit}</span>`:''}
           </div>
           <div class="bname">${p.건물명 || p.주소 || '(이름 없음)'}</div>
           ${p.건물명 && p.주소 ? `<div class="addr">${p.주소}</div>` : ''}
         </div>
         <button class="stamp ${STATUS_CLASS[p.파밍여부]||'s0'}" data-stamp="${p.매물ID}">${p.파밍여부||'파밍예정'}</button>
       </div>
+      <div class="farmdate"><span class="dot"></span>파밍일자 ${p.파밍일자||'-'}</div>
       <div class="specs">
-        ${num(p.전용면적)!==null?`<span class="pyung">${p.전용면적}평</span>`:''}
-        ${p.층수?`<span>${p.층수}${p.총층?'/'+p.총층:''}층</span>`:''}
-        ${p.방향?`<span>${p.방향}향</span>`:''}
-        <span>${priceLine}</span>
-        ${pp!==null?`<span>평단가 <b>${pp}</b>만</span>`:''}
+        <div class="item">평수 <b>${p.전용면적?p.전용면적+'평':'-'}</b></div>
+        <div class="item">층수 <b>${p.층수?p.층수+(p.총층?'/'+p.총층:'')+'층':'-'}</b></div>
+        <div class="item">${priceLine==='매매가'?'매매가':'보증금'} <b>${fmt(p.보증금매매가)}</b></div>
+        ${(p.거래유형==='월세'||p.거래유형==='단기임대')?`<div class="item">월세 <b>${fmt(p.월세)}</b></div>`:''}
+        <div class="item">관리비 <b>${fmt(p.관리비)}</b></div>
+        <div class="pyung">평단가 <b>${p.평단가!==''&&p.평단가!==undefined?p.평단가:'-'}</b>만</div>
       </div>
       ${p.메모?`<div class="memo">${p.메모}</div>`:''}
       <div class="card-foot">
-        ${p.주소?`<a class="link-btn" href="${mapUrl(p.주소)}" target="_blank" rel="noopener">지도보기</a>`:''}
-        ${p.네이버번호?`<a class="link-btn" href="${articleUrl(p.네이버번호)}" target="_blank" rel="noopener">매물보기</a>`:''}
-        <button class="link-btn" data-edit="${p.매물ID}" style="flex:0 0 52px">수정</button>
-        <span class="fdate">${p.파밍일자||''}</span>
+        ${p.주소?`<a class="link-btn" href="${mapUrl(p.주소)}" target="_blank" rel="noopener"><span class="ic">🗺️</span>매물지도</a>`:`<span class="link-btn" style="opacity:.35"><span class="ic">🗺️</span>매물지도</span>`}
+        ${link?`<a class="link-btn" href="${link}" target="_blank" rel="noopener"><span class="ic">🔗</span>매물광고</a>`:`<span class="link-btn" style="opacity:.35"><span class="ic">🔗</span>매물광고</span>`}
+        <button class="link-btn" data-edit="${p.매물ID}"><span class="ic">✏️</span>매물수정</button>
+        <button class="link-btn del" data-del="${p.매물ID}"><span class="ic">🗑️</span>매물삭제</button>
       </div>
     </div>`;
   }).join('');
 }
 
-/* ===== 이벤트 ===== */
-$('logoReset').onclick = ()=>{ state.tab='routine'; state.statusFilter='전체'; state.typeFilter='전체'; state.custId=''; render(); };
-$('tabRoutine').onclick = ()=>{ state.tab='routine'; state.statusFilter='전체'; state.typeFilter='전체'; render(); };
-$('tabCust').onclick    = ()=>{ state.tab='cust';    state.statusFilter='전체'; state.typeFilter='전체'; render(); };
-$('custBar').addEventListener('change', e=>{ if(e.target.id==='custSelect'){ state.custId=e.target.value; render(); } });
+/* ===== 날짜 이동 ===== */
+function shiftDate(days){
+  const dt = new Date(state.date + 'T00:00:00');
+  dt.setDate(dt.getDate() + days);
+  state.date = dt.toISOString().slice(0,10);
+  render();
+}
+$('datePrev').onclick = ()=>shiftDate(-1);
+$('dateNext').onclick = ()=>shiftDate(1);
+$('dateToday').onclick = ()=>{ state.date = todayStr(); render(); };
 
-$('chips').addEventListener('click', e=>{
-  const b = e.target.closest('.chip'); if(!b) return;
-  if(b.dataset.status){ state.statusFilter = b.dataset.status; }
-  if(b.dataset.type){ state.typeFilter = state.typeFilter===b.dataset.type ? '전체' : b.dataset.type; }
+/* ===== 캘린더 ===== */
+function openCalendar(){
+  const [y,m] = state.date.split('-').map(Number);
+  state.calViewMonth = {y, m};
+  renderCalendar();
+  $('calScrim').classList.add('on');
+}
+function renderCalendar(){
+  const {y,m} = state.calViewMonth;
+  $('calTitle').textContent = y + '년 ' + m + '월';
+  const first = new Date(y, m-1, 1);
+  const startDow = first.getDay();
+  const daysInMonth = new Date(y, m, 0).getDate();
+  const daysInPrevMonth = new Date(y, m-1, 0).getDate();
+  const farmedDates = new Set(state.properties.map(p=>p.파밍일자).filter(Boolean));
+  let cells = WD.map(w=>`<div class="cal-wd">${w}</div>`).join('');
+  for(let i=startDow-1;i>=0;i--){
+    cells += `<div class="cal-day mute">${daysInPrevMonth-i}</div>`;
+  }
+  for(let d=1; d<=daysInMonth; d++){
+    const ds = y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const isToday = ds === todayStr();
+    const isSel = ds === state.date;
+    cells += `<button class="cal-day ${isToday?'today':''} ${isSel?'sel':''}" data-date="${ds}">${d}${farmedDates.has(ds)?'<span class="dot"></span>':''}</button>`;
+  }
+  const totalCells = startDow + daysInMonth;
+  const trailing = (7 - (totalCells % 7)) % 7;
+  for(let d=1; d<=trailing; d++) cells += `<div class="cal-day mute">${d}</div>`;
+  $('calGrid').innerHTML = cells;
+}
+$('dateOpen').onclick = openCalendar;
+$('calScrim').onclick = e=>{ if(e.target.id==='calScrim') $('calScrim').classList.remove('on'); };
+$('calPrev').onclick = ()=>{ let {y,m}=state.calViewMonth; m--; if(m<1){m=12;y--;} state.calViewMonth={y,m}; renderCalendar(); };
+$('calNext').onclick = ()=>{ let {y,m}=state.calViewMonth; m++; if(m>12){m=1;y++;} state.calViewMonth={y,m}; renderCalendar(); };
+$('calGrid').addEventListener('click', e=>{
+  const b = e.target.closest('[data-date]'); if(!b) return;
+  state.date = b.dataset.date;
+  $('calScrim').classList.remove('on');
   render();
 });
 
+/* ===== 탭/필터 이벤트 ===== */
+$('logoReset').onclick = ()=>{ state.scope='all'; state.statusFilter='전체'; state.custId=''; state.date=todayStr(); render(); };
+$('tabAll').onclick = ()=>{ state.scope='all'; state.statusFilter='전체'; render(); };
+$('tabRoutine').onclick = ()=>{ state.scope='routine'; state.statusFilter='전체'; render(); };
+$('tabCust').onclick = ()=>{ state.scope='customer'; state.statusFilter='전체'; render(); };
+$('custSelect').addEventListener('change', e=>{ state.custId = e.target.value; render(); });
+$('condMore').onclick = ()=>{ if(state.custId) openCustomerDetail(state.custId); };
+$('chips').addEventListener('click', e=>{
+  const b = e.target.closest('.chip'); if(!b) return;
+  state.statusFilter = b.dataset.status; render();
+});
+
+/* ===== 카드 액션 ===== */
 $('list').addEventListener('click', e=>{
   const st = e.target.closest('[data-stamp]');
   if(st){
     const p = state.properties.find(x=>x.매물ID===st.dataset.stamp); if(!p) return;
     const next = STATUS[(STATUS.indexOf(p.파밍여부)+1) % STATUS.length] || '파밍예정';
     p.파밍여부 = next;
-    if(next==='파밍완료' && !p.파밍일자) p.파밍일자 = todayStr();
     render();
-    jsonp({mode:'status', 매물ID:p.매물ID, 파밍여부:next, 파밍일자:p.파밍일자}).catch(()=>toast('전송 실패 — 시트에 반영 안됐을 수 있음'));
+    jsonp({mode:'status', 매물ID:p.매물ID, 파밍여부:next}).catch(()=>toast('전송 실패 — 시트에 반영 안됐을 수 있음'));
     toast(next + ' 처리');
     return;
   }
   const ed = e.target.closest('[data-edit]');
-  if(ed) openSheet(ed.dataset.edit);
+  if(ed){ openSheet(ed.dataset.edit); return; }
+  const del = e.target.closest('[data-del]');
+  if(del){
+    if(!confirm('이 매물을 삭제할까요? 구글시트에서도 함께 삭제됩니다.')) return;
+    const id = del.dataset.del;
+    state.properties = state.properties.filter(p=>p.매물ID!==id);
+    render();
+    jsonp({mode:'delete', 매물ID:id}).then(()=>toast('삭제 완료')).catch(()=>toast('삭제 전송 실패'));
+  }
+});
+
+/* ===== 매물 추가/수정 시트 ===== */
+let addScope = 'routine';
+$('segScope').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  addScope = b.dataset.v;
+  $('segScope').querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  $('custPickWrap').style.display = addScope==='customer' ? 'block' : 'none';
 });
 
 function openSheet(editId){
   state.editId = editId || null;
   const p = editId ? state.properties.find(x=>x.매물ID===editId) : null;
   $('sheetTitle').textContent = p ? '매물 수정' : '매물 추가';
-  $('fNaver').value = p?.네이버번호||''; $('fName').value = p?.건물명||''; $('fAddr').value = p?.주소||'';
+  addScope = p ? (p.고객ID ? 'customer' : 'routine') : (state.scope==='customer' ? 'customer' : 'routine');
+  $('segScope').querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===addScope));
+  $('custPickWrap').style.display = addScope==='customer' ? 'block' : 'none';
+  $('fCust').innerHTML = state.customers.map(c=>`<option value="${c.고객ID}">${c.고객ID} · ${c.고객명}</option>`).join('');
+  if(p?.고객ID) $('fCust').value = p.고객ID;
+  else if(state.custId) $('fCust').value = state.custId;
+
+  $('fDate').value = p?.파밍일자 || state.date;
+  $('fLink').value = p?.매물링크 || '';
+  $('fName').value = p?.건물명||''; $('fAddr').value = p?.주소||'';
   $('fType').value = p?.유형||'사무실'; $('fDeal').value = p?.거래유형||'월세';
   $('fFloor').value = p?.층수||''; $('fFloorAll').value = p?.총층||''; $('fArea').value = p?.전용면적||'';
   $('fDeposit').value = p?.보증금매매가||''; $('fRent').value = p?.월세||''; $('fMgmt').value = p?.관리비||'';
-  $('fDir').value = p?.방향||''; $('fMemo').value = p?.메모||'';
-  $('fCust').innerHTML = '<option value="">루틴 (배정 없음)</option>' +
-    state.customers.map(c=>`<option value="${c.고객ID}">${c.고객명}</option>`).join('');
-  $('fCust').value = p?.고객ID||(state.tab==='cust'?state.custId:'');
+  $('fMemo').value = p?.메모||'';
   $('scrim').classList.add('on'); $('sheetAdd').classList.add('on');
 }
 function closeSheet(){ $('scrim').classList.remove('on'); $('sheetAdd').classList.remove('on'); }
 $('fabAdd').onclick = ()=>openSheet();
-$('scrim').onclick = closeSheet;
+$('scrim').onclick = e=>{ if(e.target.id==='scrim') closeSheet(); };
 
 $('btnSave').onclick = async ()=>{
   const isEdit = !!state.editId;
+  const linkRaw = $('fLink').value.trim();
+  const link = /^\d+$/.test(linkRaw) ? ('https://fin.land.naver.com/articles/' + linkRaw) : linkRaw;
+  const custId = addScope==='customer' ? $('fCust').value : '';
   const p = isEdit ? state.properties.find(x=>x.매물ID===state.editId)
-                   : {매물ID:'(임시)', 파밍여부:'파밍예정', 파밍일자:'', 등록일:todayStr()};
+                   : {매물ID:'(임시)', 파밍여부:'파밍예정'};
   Object.assign(p, {
-    네이버번호:$('fNaver').value.trim(), 건물명:$('fName').value.trim(), 주소:$('fAddr').value.trim(),
+    파밍일자: $('fDate').value || todayStr(),
+    매물링크: link, 건물명:$('fName').value.trim(), 주소:$('fAddr').value.trim(),
     유형:$('fType').value, 거래유형:$('fDeal').value,
     층수:$('fFloor').value.trim(), 총층:$('fFloorAll').value.trim(), 전용면적:$('fArea').value.trim(),
     보증금매매가:$('fDeposit').value.trim(), 월세:$('fRent').value.trim(), 관리비:$('fMgmt').value.trim(),
-    방향:$('fDir').value, 메모:$('fMemo').value.trim(), 고객ID:$('fCust').value,
+    메모:$('fMemo').value.trim(), 고객ID: custId,
   });
-  if(!p.주소 && !p.네이버번호){ toast('주소 또는 네이버번호를 입력하세요'); return; }
+  if(!p.주소 && !p.매물링크){ toast('주소 또는 매물링크를 입력하세요'); return; }
   if(!isEdit) state.properties.unshift(p);
   closeSheet(); render();
   toast(isEdit?'수정 완료':'매물 추가 완료');
@@ -545,59 +676,76 @@ $('btnSave').onclick = async ()=>{
   }catch(e){ toast('전송 실패 — 시트에 반영 안됐을 수 있음'); }
 };
 
+/* ===== 고객 상세 모달 ===== */
+function openCustomerDetail(id){
+  const c = state.customers.find(x=>x.고객ID===id); if(!c) return;
+  $('cmTitle').textContent = c.고객ID;
+  $('cmBody').innerHTML = [
+    ['고객명', c.고객명], ['희망 지역', c.희망지역], ['희망 거래유형', c.희망거래유형],
+    ['평수(최소)', c.평수최소?c.평수최소+'평':'-'], ['평수(최대)', c.평수최대?c.평수최대+'평':'-'],
+    ['예산 보증금/매매가', c.예산보증금매매가], ['예산 월세', c.예산월세],
+    ['희망 층수', c.희망층수], ['기타 요청사항', c.기타요청],
+  ].map(([k,v])=>`<div class="crow"><div class="ck">${k}</div><div class="cv">${v||'-'}</div></div>`).join('');
+  $('custModalScrim').classList.add('on');
+}
+$('cmClose').onclick = ()=>$('custModalScrim').classList.remove('on');
+$('custModalScrim').onclick = e=>{ if(e.target.id==='custModalScrim') $('custModalScrim').classList.remove('on'); };
+
+/* ===== 고객 전체 리스트 ===== */
+function openCustList(){
+  $('custListBody').innerHTML = state.customers.map(c=>
+    `<div class="custlist-item" data-cust="${c.고객ID}">
+      <div class="cn">${c.고객ID} · ${c.고객명}</div>
+      <div class="cs">${c.희망지역||'-'} · ${c.희망거래유형||'-'} · ${c.평수최소||'?'}~${c.평수최대||'?'}평</div>
+    </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다</div></div>';
+  $('scrimCustList').classList.add('on'); $('sheetCustList').classList.add('on');
+}
+$('btnCustList').onclick = openCustList;
+$('scrimCustList').onclick = ()=>{ $('scrimCustList').classList.remove('on'); $('sheetCustList').classList.remove('on'); };
+$('custListBody').addEventListener('click', e=>{
+  const item = e.target.closest('[data-cust]'); if(!item) return;
+  openCustomerDetail(item.dataset.cust);
+});
+
 $('btnRefresh').onclick = ()=>{
   $('btnRefresh').classList.add('spin');
   loadData(true).finally(()=> $('btnRefresh').classList.remove('spin'));
 };
 
-/* PWA 서비스워커 */
 if('serviceWorker' in navigator && location.protocol==='https:'){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 
-/* ---- 비밀번호 잠금 (구글 시트 연동) ---- */
+/* ===== 비밀번호 잠금 ===== */
 (function(){
   const lockScreen = $('lockScreen'), lockInput = $('lockInput'), lockBtn = $('lockBtn'), lockErr = $('lockErr');
   let correctPass = null, passLoaded = false, passLoading = false;
   const PASS_CACHE_KEY = 'farming_pass_cache';
-
-  try{
-    const cached = localStorage.getItem(PASS_CACHE_KEY);
-    if(cached){ correctPass = cached; passLoaded = true; }
-  }catch(e){}
-
+  try{ const cached = localStorage.getItem(PASS_CACHE_KEY); if(cached){ correctPass = cached; passLoaded = true; } }catch(e){}
   function unlock(){ lockScreen.style.display = 'none'; }
-
   function tryUnlock(){
     const entered = lockInput.value.trim();
     if(!entered){ lockErr.textContent = '비밀번호를 입력해 주세요'; return; }
-    if(!passLoaded){
-      if(!passLoading){ lockErr.textContent = '서버에 연결하는 중...'; loadPass(); }
-      return;
-    }
-    if(!correctPass || entered === correctPass){
-      unlock();
-    } else {
+    if(!passLoaded){ if(!passLoading){ lockErr.textContent = '서버에 연결하는 중...'; loadPass(); } return; }
+    if(!correctPass || entered === correctPass){ unlock(); }
+    else {
       lockErr.textContent = '비밀번호가 틀렸습니다';
-      lockInput.value = ''; lockInput.focus();
-      lockInput.style.borderColor = '#E03A3A';
-      setTimeout(()=>{ lockInput.style.borderColor = ''; }, 800);
+      lockInput.value=''; lockInput.focus();
+      lockInput.style.borderColor='#E03A3A'; setTimeout(()=>{lockInput.style.borderColor='';},800);
     }
   }
   lockBtn.addEventListener('click', tryUnlock);
   lockInput.addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
-
   async function loadPass(){
-    if(passLoading) return;
-    passLoading = true;
+    if(passLoading) return; passLoading = true;
     const hadCache = passLoaded;
     try{
       const data = await jsonpRetry({mode:'pass'}, 15000);
       correctPass = data && data.pass !== undefined ? String(data.pass).trim() : '';
       passLoaded = true;
-      if(!hadCache){ lockErr.textContent = ''; lockInput.focus(); }
+      if(!hadCache){ lockErr.textContent=''; lockInput.focus(); }
       try{ localStorage.setItem(PASS_CACHE_KEY, correctPass); }catch(e){}
-      if(!correctPass && !hadCache) unlock();  // 비번 미설정이면 바로 통과
+      if(!correctPass && !hadCache) unlock();
     }catch(e){
       if(!hadCache) lockErr.textContent = '서버 연결이 원활하지 않습니다. 확인 버튼을 다시 눌러주세요';
     }finally{ passLoading = false; }
@@ -605,7 +753,10 @@ if('serviceWorker' in navigator && location.protocol==='https:'){
   loadPass();
 })();
 
+/* ===== 초기화 ===== */
+state.date = todayStr();
 loadData();
+setTimeout(()=>{ $('splash').classList.add('hide'); }, 650);
 </script>
 </body>
 </html>

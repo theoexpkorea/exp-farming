@@ -1,7 +1,5 @@
-// 파밍서치 서비스워커 — 앱 셸 캐시 (데이터는 항상 네트워크 우선)
-const CACHE = 'farming-search-v1';
+const CACHE = 'farming-search-v2';
 const SHELL = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
-
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)));
   self.skipWaiting();
