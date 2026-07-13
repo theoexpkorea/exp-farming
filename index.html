@@ -46,17 +46,6 @@ button{font-family:inherit;border:none;background:none;cursor:pointer;color:inhe
 }
 #fabWrap{position:fixed;inset:0;max-width:480px;margin:0 auto;pointer-events:none;z-index:40}
 
-/* ---- 스플래시 ---- */
-#splash{
-  position:fixed; inset:0; z-index:1000; background:var(--brand-dark);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  transition:opacity .35s ease; gap:6px;
-}
-#splash.hide{opacity:0; pointer-events:none}
-#splash .sp-logo{font-size:28px;font-weight:800;letter-spacing:-.04em;color:#fff}
-#splash .sp-logo .o{color:var(--gold)}
-#splash .sp-cap{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 32px);font-size:12px;letter-spacing:.06em;color:rgba(255,255,255,.55);font-weight:700}
-
 /* ---- 비밀번호 화면 ---- */
 #lockScreen{
   position:fixed; inset:0; z-index:999; background:var(--bg);
@@ -254,11 +243,6 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 </style>
 </head>
 <body>
-
-<div id="splash">
-  <div class="sp-logo">the<span class="o">o</span></div>
-  <div class="sp-cap">Farming Search</div>
-</div>
 
 <div id="lockScreen">
   <div class="lock-logo">the<span class="o">o</span></div>
@@ -845,12 +829,6 @@ if('serviceWorker' in navigator && location.protocol==='https:'){
 /* ===== 초기화 ===== */
 state.date = todayStr();
 loadData();
-const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-if(!isStandalone){
-  $('splash').style.display = 'none';
-} else {
-  setTimeout(()=>{ $('splash').classList.add('hide'); }, 650);
-}
 </script>
 </body>
 </html>
