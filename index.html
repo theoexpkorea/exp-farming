@@ -38,6 +38,14 @@ body{
 }
 button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
 
+/* ---- 데스크탑 폭 제한 (모바일 앱처럼 보이게) ---- */
+.app-shell{max-width:480px;margin:0 auto;position:relative}
+@media (min-width:560px){
+  .app-shell{box-shadow:0 0 0 1px var(--line);min-height:100vh}
+  body{background:#E7E9ED}
+}
+#fabWrap{position:fixed;inset:0;max-width:480px;margin:0 auto;pointer-events:none;z-index:40}
+
 /* ---- 스플래시 ---- */
 #splash{
   position:fixed; inset:0; z-index:1000; background:var(--brand);
@@ -97,14 +105,19 @@ nav.tabs button.on.all{background:var(--brand);color:#fff;border-color:var(--bra
 nav.tabs button.on.routine{background:var(--sale-bg);color:var(--sale);border-color:var(--sale-bg)}
 nav.tabs button.on.customer{background:var(--jeonse-bg);color:var(--jeonse);border-color:var(--jeonse-bg)}
 
-/* ---- 고객 선택 ---- */
+/* ---- 고객 선택 (매물뷰 스타일 커스텀 드롭다운) ---- */
 .cust-bar{padding:0 16px 0;display:none;gap:8px;flex-direction:column}
-.cust-select-wrap{position:relative}
-.cust-select-wrap select{
-  width:100%; padding:11px 40px 11px 14px; border:1px solid var(--line); border-radius:11px;
-  background:var(--surface); font-weight:700; color:var(--ink); appearance:none; font-family:inherit; font-size:13.5px;
-}
-.cust-select-wrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;pointer-events:none}
+.sortpick-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:11px;background:var(--surface);font-weight:700;color:var(--ink);font-size:13.5px}
+.sortpick-btn .car{color:var(--muted);font-size:11px;transition:transform .15s}
+.sortpick-btn.open .car{transform:rotate(180deg)}
+.sortpick-pop{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--surface);border:1px solid var(--line);border-radius:13px;box-shadow:0 8px 24px rgba(20,24,32,.14);z-index:45;overflow:hidden;display:none}
+.sortpick-pop.open{display:block}
+.sortpick-pop .opt{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;font-size:13.5px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line-2)}
+.sortpick-pop .opt:last-child{border-bottom:0}
+.sortpick-pop .opt:active{background:var(--line-2)}
+.sortpick-pop .opt.sel{color:var(--brand-2);font-weight:800}
+.sortpick-pop .opt .ck{color:var(--brand-2);font-weight:900;opacity:0;}
+.sortpick-pop .opt.sel .ck{opacity:1}
 .cond-chip{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:10px 13px;font-size:12.5px;color:var(--muted)}
 .cond-chip b{color:var(--ink);font-size:13.5px}
 .cond-chip .more{margin-left:auto;color:var(--brand-2);font-weight:800;font-size:12px}
@@ -165,7 +178,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 .empty .em-s{font-size:13px}
 
 /* ---- FAB & 시트 ---- */
-.fab{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:40;background:var(--brand-2);color:#fff;font-weight:800;font-size:14px;padding:15px 22px;border-radius:999px;box-shadow:0 6px 18px rgba(31,122,77,.35);display:flex;align-items:center;gap:7px}
+.fab{position:absolute;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));background:var(--brand-2);color:#fff;font-weight:800;font-size:14px;padding:15px 22px;border-radius:999px;box-shadow:0 6px 18px rgba(31,122,77,.35);display:flex;align-items:center;gap:7px;pointer-events:auto}
 .fab:active{transform:scale(.96)}
 .scrim{position:fixed;inset:0;background:rgba(15,18,24,.42);z-index:50;display:none}
 .scrim.on{display:block}
@@ -245,6 +258,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   </div>
 </div>
 
+<div class="app-shell">
 <header>
   <div class="head-row">
     <div class="brand" id="logoReset">
@@ -252,7 +266,9 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
       <span class="by">파밍서치 · eXp Korea</span>
     </div>
     <div class="head-actions">
-      <button class="icon-btn" id="btnCustList" title="고객조건 보기">👤</button>
+      <button class="icon-btn" id="btnCustList" title="고객조건 보기">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
       <button class="icon-btn" id="btnRefresh" title="새로고침">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
       </button>
@@ -277,16 +293,20 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 <div class="banner" id="demoBanner">서버 연결이 원활하지 않습니다 — 마지막으로 불러온 데이터를 표시합니다.</div>
 
 <div class="cust-bar" id="custBar">
-  <div class="cust-select-wrap"><select id="custSelect"></select></div>
+  <div style="position:relative">
+    <button class="sortpick-btn" id="custPickBtn"><span id="custPickLabel">전체 고객</span><span class="car">▾</span></button>
+    <div class="sortpick-pop" id="custPickPop"></div>
+  </div>
   <div class="cond-chip" id="condChip" style="display:none">
-    <span>👤 <b id="condName"></b> · <span id="condShort"></span></span>
+    <span><b id="condName"></b> · <span id="condShort"></span></span>
     <span class="more" id="condMore">조건보기</span>
   </div>
 </div>
 
 <div class="chips" id="chips"></div>
 <main id="list"></main>
-<button class="fab" id="fabAdd">＋ 매물 추가</button>
+</div>
+<div id="fabWrap"><button class="fab" id="fabAdd">＋ 매물 추가</button></div>
 
 <!-- 매물 추가/수정 -->
 <div class="scrim" id="scrim"></div>
@@ -380,7 +400,8 @@ let state = {
 };
 
 const $ = id => document.getElementById(id);
-const todayStr = () => new Date().toISOString().slice(0,10);
+function toDateStr(dt){ return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0'); }
+const todayStr = () => toDateStr(new Date());
 const num = v => { const n = parseFloat(String(v).replace(/,/g,'')); return isNaN(n) ? null : n; };
 const fmt = v => { const n = num(v); return n===null ? '-' : n.toLocaleString('ko-KR'); };
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
@@ -462,9 +483,12 @@ function render(){
   $('custBar').style.display = state.scope==='customer' ? 'flex' : 'none';
 
   if(state.scope==='customer'){
-    const sel = $('custSelect');
-    sel.innerHTML = '<option value="">전체 고객</option>' +
-      state.customers.map(c=>`<option value="${c.고객ID}" ${c.고객ID===state.custId?'selected':''}>${c.고객ID} · ${c.고객명}</option>`).join('');
+    const options = [{id:'', label:'전체 고객'}, ...state.customers.map(c=>({id:c.고객ID, label:c.고객ID+' · '+c.고객명}))];
+    const selOpt = options.find(o=>o.id===state.custId) || options[0];
+    $('custPickLabel').textContent = selOpt.label;
+    $('custPickPop').innerHTML = options.map(o=>
+      `<div class="opt ${o.id===state.custId?'sel':''}" data-cust="${o.id}"><span>${o.label}</span><span class="ck">✓</span></div>`
+    ).join('');
     const c = state.customers.find(x=>x.고객ID===state.custId);
     if(c){
       $('condChip').style.display = 'flex';
@@ -531,9 +555,10 @@ function render(){
 
 /* ===== 날짜 이동 ===== */
 function shiftDate(days){
-  const dt = new Date(state.date + 'T00:00:00');
+  const [y,m,d] = state.date.split('-').map(Number);
+  const dt = new Date(y, m-1, d);
   dt.setDate(dt.getDate() + days);
-  state.date = dt.toISOString().slice(0,10);
+  state.date = toDateStr(dt);
   render();
 }
 $('datePrev').onclick = ()=>shiftDate(-1);
@@ -586,7 +611,18 @@ $('logoReset').onclick = ()=>{ state.scope='all'; state.statusFilter='전체'; s
 $('tabAll').onclick = ()=>{ state.scope='all'; state.statusFilter='전체'; render(); };
 $('tabRoutine').onclick = ()=>{ state.scope='routine'; state.statusFilter='전체'; render(); };
 $('tabCust').onclick = ()=>{ state.scope='customer'; state.statusFilter='전체'; render(); };
-$('custSelect').addEventListener('change', e=>{ state.custId = e.target.value; render(); });
+$('custPickBtn').onclick = ()=>{ $('custPickBtn').classList.toggle('open'); $('custPickPop').classList.toggle('open'); };
+$('custPickPop').addEventListener('click', e=>{
+  const o = e.target.closest('[data-cust]'); if(!o) return;
+  state.custId = o.dataset.cust;
+  $('custPickBtn').classList.remove('open'); $('custPickPop').classList.remove('open');
+  render();
+});
+document.addEventListener('click', e=>{
+  if(!e.target.closest('#custPickBtn') && !e.target.closest('#custPickPop')){
+    $('custPickBtn').classList.remove('open'); $('custPickPop').classList.remove('open');
+  }
+});
 $('condMore').onclick = ()=>{ if(state.custId) openCustomerDetail(state.custId); };
 $('chips').addEventListener('click', e=>{
   const b = e.target.closest('.chip'); if(!b) return;
