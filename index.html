@@ -746,7 +746,8 @@ $('btnSave').onclick = async ()=>{
   toast(isEdit?'수정 완료':'매물 추가 완료');
   try{
     const res = await jsonp(isEdit ? {mode:'update', ...p} : {mode:'add', ...p});
-    if(!isEdit && res && res.매물ID){ p.매물ID = res.매물ID; render(); }
+    if(!isEdit && res && res.매물ID){ p.매물ID = res.매물ID; }
+    await loadData(); // 시트가 계산한 평단가·적합여부를 바로 반영
   }catch(e){ toast('전송 실패 — 시트에 반영 안됐을 수 있음'); }
 };
 
