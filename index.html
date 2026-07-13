@@ -320,11 +320,14 @@ main{padding:8px 10px 0;display:flex;flex-direction:column;gap:11px}
   </div>
   <div class="f-group" id="custPickWrap" style="display:none">
     <label>고객 배정</label>
-    <select id="fCust"></select>
+    <div style="position:relative">
+      <button type="button" class="sortpick-btn" id="fCustBtn"><span id="fCustLabel">고객 선택</span><span class="car">▾</span></button>
+      <div class="sortpick-pop" id="fCustPop"></div>
+    </div>
   </div>
   <div class="f-group">
     <label>파밍일자</label>
-    <input id="fDate" type="date">
+    <button type="button" class="sortpick-btn" id="fDateBtn"><span id="fDateLabel"></span><span class="car">▾</span></button>
   </div>
   <div class="f-group">
     <label>매물 링크</label>
@@ -568,14 +571,20 @@ $('dateNext').onclick = ()=>shiftDate(1);
 $('dateToday').onclick = ()=>{ state.date = todayStr(); render(); };
 
 /* ===== 캘린더 ===== */
-function openCalendar(){
-  const [y,m] = state.date.split('-').map(Number);
+let calTarget = 'main';
+let formDateValue = '';
+let formCustId = '';
+
+function openCalendar(target, baseDate){
+  calTarget = target || 'main';
+  const [y,m] = (baseDate || state.date).split('-').map(Number);
   state.calViewMonth = {y, m};
   renderCalendar();
   $('calScrim').classList.add('on');
 }
 function renderCalendar(){
   const {y,m} = state.calViewMonth;
+  const selDate = calTarget === 'form' ? formDateValue : state.date;
   $('calTitle').textContent = y + '년 ' + m + '월';
   const first = new Date(y, m-1, 1);
   const startDow = first.getDay();
@@ -589,7 +598,7 @@ function renderCalendar(){
   for(let d=1; d<=daysInMonth; d++){
     const ds = y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
     const isToday = ds === todayStr();
-    const isSel = ds === state.date;
+    const isSel = ds === selDate;
     cells += `<button class="cal-day ${isToday?'today':''} ${isSel?'sel':''}" data-date="${ds}">${d}${farmedDates.has(ds)?'<span class="dot"></span>':''}</button>`;
   }
   const totalCells = startDow + daysInMonth;
@@ -597,16 +606,22 @@ function renderCalendar(){
   for(let d=1; d<=trailing; d++) cells += `<div class="cal-day mute">${d}</div>`;
   $('calGrid').innerHTML = cells;
 }
-$('dateOpen').onclick = openCalendar;
+$('dateOpen').onclick = ()=>openCalendar('main');
 $('calScrim').onclick = e=>{ if(e.target.id==='calScrim') $('calScrim').classList.remove('on'); };
 $('calPrev').onclick = ()=>{ let {y,m}=state.calViewMonth; m--; if(m<1){m=12;y--;} state.calViewMonth={y,m}; renderCalendar(); };
 $('calNext').onclick = ()=>{ let {y,m}=state.calViewMonth; m++; if(m>12){m=1;y++;} state.calViewMonth={y,m}; renderCalendar(); };
 $('calGrid').addEventListener('click', e=>{
   const b = e.target.closest('[data-date]'); if(!b) return;
-  state.date = b.dataset.date;
+  if(calTarget === 'form'){
+    formDateValue = b.dataset.date;
+    $('fDateLabel').textContent = formDateValue;
+  } else {
+    state.date = b.dataset.date;
+    render();
+  }
   $('calScrim').classList.remove('on');
-  render();
 });
+$('fDateBtn').onclick = ()=>openCalendar('form', formDateValue || state.date);
 
 /* ===== 탭/필터 이벤트 ===== */
 $('logoReset').onclick = ()=>{ state.scope='all'; state.statusFilter='전체'; state.custId=''; state.date=todayStr(); render(); };
@@ -672,11 +687,12 @@ function openSheet(editId){
   addScope = p ? (p.고객ID ? 'customer' : 'routine') : (state.scope==='customer' ? 'customer' : 'routine');
   $('segScope').querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===addScope));
   $('custPickWrap').style.display = addScope==='customer' ? 'block' : 'none';
-  $('fCust').innerHTML = state.customers.map(c=>`<option value="${c.고객ID}">${c.고객ID} · ${c.고객명}</option>`).join('');
-  if(p?.고객ID) $('fCust').value = p.고객ID;
-  else if(state.custId) $('fCust').value = state.custId;
+  formCustId = p?.고객ID || state.custId || '';
+  renderFCustPop();
+  $('fCustLabel').textContent = formCustId ? (state.customers.find(c=>c.고객ID===formCustId)?.고객ID + ' · ' + state.customers.find(c=>c.고객ID===formCustId)?.고객명) : '고객 선택';
 
-  $('fDate').value = p?.파밍일자 || state.date;
+  formDateValue = p?.파밍일자 || state.date;
+  $('fDateLabel').textContent = formDateValue;
   $('fLink').value = p?.매물링크 || '';
   $('fName').value = p?.건물명||''; $('fAddr').value = p?.주소||'';
   $('fType').value = p?.유형||'사무실'; $('fDeal').value = p?.거래유형||'월세';
@@ -686,6 +702,26 @@ function openSheet(editId){
   $('scrim').classList.add('on'); $('sheetAdd').classList.add('on');
 }
 function closeSheet(){ $('scrim').classList.remove('on'); $('sheetAdd').classList.remove('on'); }
+function renderFCustPop(){
+  $('fCustPop').innerHTML = state.customers.map(c=>
+    `<div class="opt ${c.고객ID===formCustId?'sel':''}" data-fcust="${c.고객ID}"><span>${c.고객ID} · ${c.고객명}</span><span class="ck">✓</span></div>`
+  ).join('') || '<div class="opt">등록된 고객이 없습니다</div>';
+}
+$('fCustBtn').onclick = ()=>{ $('fCustBtn').classList.toggle('open'); $('fCustPop').classList.toggle('open'); };
+$('fCustPop').addEventListener('click', e=>{
+  const o = e.target.closest('[data-fcust]'); if(!o) return;
+  formCustId = o.dataset.fcust;
+  const c = state.customers.find(x=>x.고객ID===formCustId);
+  $('fCustLabel').textContent = c ? (c.고객ID + ' · ' + c.고객명) : '고객 선택';
+  $('fCustBtn').classList.remove('open'); $('fCustPop').classList.remove('open');
+  renderFCustPop();
+});
+document.addEventListener('click', e=>{
+  if(!e.target.closest('#fCustBtn') && !e.target.closest('#fCustPop')){
+    $('fCustBtn').classList.remove('open'); $('fCustPop').classList.remove('open');
+  }
+});
+
 $('fabAdd').onclick = ()=>openSheet();
 $('scrim').onclick = e=>{ if(e.target.id==='scrim') closeSheet(); };
 
@@ -693,11 +729,11 @@ $('btnSave').onclick = async ()=>{
   const isEdit = !!state.editId;
   const linkRaw = $('fLink').value.trim();
   const link = /^\d+$/.test(linkRaw) ? ('https://fin.land.naver.com/articles/' + linkRaw) : linkRaw;
-  const custId = addScope==='customer' ? $('fCust').value : '';
+  const custId = addScope==='customer' ? formCustId : '';
   const p = isEdit ? state.properties.find(x=>x.매물ID===state.editId)
                    : {매물ID:'(임시)', 파밍여부:'파밍예정'};
   Object.assign(p, {
-    파밍일자: $('fDate').value || todayStr(),
+    파밍일자: formDateValue || todayStr(),
     매물링크: link, 건물명:$('fName').value.trim(), 주소:$('fAddr').value.trim(),
     유형:$('fType').value, 거래유형:$('fDeal').value,
     층수:$('fFloor').value.trim(), 총층:$('fFloorAll').value.trim(), 전용면적:$('fArea').value.trim(),
