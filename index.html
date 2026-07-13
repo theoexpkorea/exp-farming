@@ -107,8 +107,8 @@ nav.tabs button.on.customer{background:var(--jeonse-bg);color:var(--jeonse);bord
 .sortpick-pop .opt.sel{color:var(--brand-2);font-weight:800}
 .sortpick-pop .opt .ck{color:var(--brand-2);font-weight:900;opacity:0;}
 .sortpick-pop .opt.sel .ck{opacity:1}
-.cond-chip{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--jeonse-bg);border:1px solid #F3E4C5;border-radius:11px;padding:11px 13px;font-size:13px;font-weight:700;color:var(--jeonse)}
-.cond-chip:active{opacity:.85}
+.cond-chip{display:inline-flex;align-items:center;gap:5px;align-self:flex-end;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700;color:var(--brand-2)}
+.cond-chip:active{background:var(--line-2)}
 .cond-chip b{color:var(--ink);font-size:13.5px}
 .cond-chip .more{margin-left:auto;color:var(--brand-2);font-weight:800;font-size:12px}
 
@@ -297,7 +297,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
     <div class="sortpick-pop" id="custPickPop"></div>
   </div>
   <button class="cond-chip" id="condChip" style="display:none">
-    <span>📋 조건보기</span>
+    <span>고객 조건보기</span><span style="opacity:.6">›</span>
   </button>
 </div>
 
