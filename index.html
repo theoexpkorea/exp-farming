@@ -256,7 +256,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   <div class="lock-logo">the<span class="o">o</span></div>
   <div class="lock-sub">파밍서치 · eXp Korea</div>
   <div class="lock-box">
-    <div class="lock-title">비밀번호를 입력하세요</div>
+    <div class="lock-title">비밀번호를 입력하세요.</div>
     <input id="lockInput" class="lock-input" type="password" name="pin-code-not-a-password"
       inputmode="numeric" maxlength="8" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
     <button class="lock-btn" id="lockBtn">확인</button>
@@ -527,7 +527,7 @@ function render(){
   const list = visibleProps();
   if(!list.length){
     if(state.statusFilter !== '전체' && scopedForCount.length > 0){
-      $('list').innerHTML = `<div class="empty"><div class="em-t">'${state.statusFilter}' 상태인 매물이 없습니다.</div><div class="em-s">전체 ${scopedForCount.length}건 중 이 상태는 0건이에요. 다른 상태를 확인해보세요.</div></div>`;
+      $('list').innerHTML = `<div class="empty"><div class="em-t">'${state.statusFilter}' 상태인 매물이 없습니다.</div></div>`;
     } else {
       $('list').innerHTML = `<div class="empty"><div class="em-t">이 날짜엔 파밍 매물이 없습니다.</div><div class="em-s">아래 ＋ 버튼으로 매물을 추가하세요.</div></div>`;
     }
