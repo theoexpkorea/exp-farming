@@ -220,8 +220,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 .modal .m-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .modal .m-title{font-size:16px;font-weight:800}
 .modal .m-close{width:28px;height:28px;border-radius:50%;background:var(--chip);display:grid;place-items:center;color:var(--muted)}
-.crow{display:flex;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:13px;gap:10px}
-.crow:last-child{border-bottom:0}
+.crow{display:flex;padding:9px 0;font-size:13px;gap:10px}
 .crow .ck{flex:none;width:98px;color:var(--muted);font-weight:700}
 .crow .cv{flex:1;color:var(--ink);font-weight:600;line-height:1.5}
 
@@ -862,7 +861,7 @@ $('btnSave').onclick = async ()=>{
 function openCustomerDetail(id){
   const c = state.customers.find(x=>x.고객ID===id); if(!c) return;
   $('cmTitle').textContent = c.고객ID;
-  const tel = c.연락처 ? `<a href="tel:${c.연락처}" style="color:var(--brand-2);font-weight:800">${c.연락처}</a>` : '-';
+  const tel = c.연락처 ? `<a href="tel:${c.연락처}" style="color:var(--brand-2);font-weight:800;text-decoration:none">${c.연락처}</a>` : '-';
   $('cmBody').innerHTML = [
     ['고객명', c.고객명], ['연락처', tel, true], ['희망 지역', c.희망지역], ['희망 거래유형', c.희망거래유형],
     ['평수(최소)', c.평수최소?c.평수최소+'평':'-'], ['평수(최대)', c.평수최대?c.평수최대+'평':'-'],
