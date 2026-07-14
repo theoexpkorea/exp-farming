@@ -336,7 +336,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   <div class="f-group">
     <label>매물 링크</label>
     <input id="fLink" placeholder="네이버 매물번호 또는 전체 URL(디스코·밸류맵 등)">
-    <div class="hint">숫자만 입력하면 네이버부동산 링크로 자동 변환됩니다</div>
+    <div class="hint">숫자만 입력하면 네이버부동산 링크로 자동 변환됩니다.</div>
   </div>
   <div class="f-group"><label>건물명</label><input id="fName" placeholder="예: 동양섬유사옥"></div>
   <div class="f-group">
@@ -527,9 +527,9 @@ function render(){
   const list = visibleProps();
   if(!list.length){
     if(state.statusFilter !== '전체' && scopedForCount.length > 0){
-      $('list').innerHTML = `<div class="empty"><div class="em-t">'${state.statusFilter}' 상태인 매물이 없습니다</div><div class="em-s">전체 ${scopedForCount.length}건 중 이 상태는 0건이에요. 다른 상태를 확인해보세요</div></div>`;
+      $('list').innerHTML = `<div class="empty"><div class="em-t">'${state.statusFilter}' 상태인 매물이 없습니다.</div><div class="em-s">전체 ${scopedForCount.length}건 중 이 상태는 0건이에요. 다른 상태를 확인해보세요.</div></div>`;
     } else {
-      $('list').innerHTML = `<div class="empty"><div class="em-t">이 날짜엔 파밍 매물이 없습니다</div><div class="em-s">아래 ＋ 버튼으로 매물을 추가하세요</div></div>`;
+      $('list').innerHTML = `<div class="empty"><div class="em-t">이 날짜엔 파밍 매물이 없습니다.</div><div class="em-s">아래 ＋ 버튼으로 매물을 추가하세요.</div></div>`;
     }
     return;
   }
@@ -766,7 +766,7 @@ document.addEventListener('click', e=>{
 function renderFCustPop(){
   $('fCustPop').innerHTML = sortedCustomers().map(c=>
     `<div class="opt ${c.고객ID===formCustId?'sel':''}" data-fcust="${c.고객ID}"><span>${c.고객ID} · ${c.고객명}</span><span class="ck">✓</span></div>`
-  ).join('') || '<div class="opt">등록된 고객이 없습니다</div>';
+  ).join('') || '<div class="opt">등록된 고객이 없습니다.</div>';
 }
 $('fCustBtn').onclick = ()=>{ $('fCustBtn').classList.toggle('open'); $('fCustPop').classList.toggle('open'); };
 $('fCustPop').addEventListener('click', e=>{
@@ -846,7 +846,7 @@ $('btnSave').onclick = async ()=>{
     보증금매매가:$('fDeposit').value.trim(), 월세:$('fRent').value.trim(), 관리비:$('fMgmt').value.trim(),
     메모:$('fMemo').value.trim(), 고객ID: custId,
   });
-  if(!p.주소 && !p.매물링크){ toast('주소 또는 매물링크를 입력하세요'); return; }
+  if(!p.주소 && !p.매물링크){ toast('주소 또는 매물링크를 입력하세요.'); return; }
   if(!isEdit) state.properties.unshift(p);
   closeSheet(); render();
   toast(isEdit?'수정 완료':'매물 추가 완료');
@@ -879,7 +879,7 @@ function openCustList(){
     `<div class="custlist-item" data-cust="${c.고객ID}">
       <div class="cn">${c.고객ID} · ${c.고객명}</div>
       <div class="cs">${c.희망지역||'-'} · ${c.희망거래유형||'-'} · ${c.평수최소||'?'}~${c.평수최대||'?'}평${c.연락처?' · '+c.연락처:''}</div>
-    </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다</div></div>';
+    </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다.</div></div>';
   $('scrimCustList').classList.add('on'); $('sheetCustList').classList.add('on');
 }
 $('btnCustList').onclick = openCustList;
@@ -907,11 +907,11 @@ if('serviceWorker' in navigator && location.protocol==='https:'){
   function unlock(){ lockScreen.style.display = 'none'; }
   function tryUnlock(){
     const entered = lockInput.value.trim();
-    if(!entered){ lockErr.textContent = '비밀번호를 입력해 주세요'; return; }
+    if(!entered){ lockErr.textContent = '비밀번호를 입력해 주세요.'; return; }
     if(!passLoaded){ if(!passLoading){ lockErr.textContent = '서버에 연결하는 중...'; loadPass(); } return; }
     if(!correctPass || entered === correctPass){ unlock(); }
     else {
-      lockErr.textContent = '비밀번호가 틀렸습니다';
+      lockErr.textContent = '비밀번호가 틀렸습니다.';
       lockInput.value=''; lockInput.focus();
       lockInput.style.borderColor='#E03A3A'; setTimeout(()=>{lockInput.style.borderColor='';},800);
     }
@@ -929,7 +929,7 @@ if('serviceWorker' in navigator && location.protocol==='https:'){
       try{ localStorage.setItem(PASS_CACHE_KEY, correctPass); }catch(e){}
       if(!correctPass && !hadCache) unlock();
     }catch(e){
-      if(!hadCache) lockErr.textContent = '서버 연결이 원활하지 않습니다. 확인 버튼을 다시 눌러주세요';
+      if(!hadCache) lockErr.textContent = '서버 연결이 원활하지 않습니다. 확인 버튼을 다시 눌러주세요.';
     }finally{ passLoading = false; }
   }
   loadPass();
