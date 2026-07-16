@@ -44,7 +44,7 @@ button{font-family:inherit;border:none;background:none;cursor:pointer;color:inhe
   .app-shell{box-shadow:0 0 0 1px var(--line);min-height:100vh}
   body{background:#E7E9ED}
 }
-#fabWrap{position:fixed;inset:0;max-width:480px;margin:0 auto;pointer-events:none;z-index:40}
+#fabWrap{position:fixed;inset:0;pointer-events:none;z-index:40}
 
 /* ---- 비밀번호 화면 ---- */
 #lockScreen{
@@ -850,21 +850,31 @@ document.addEventListener('click', e=>{
 
 $('fabAdd').onclick = ()=>{ if(!$('fabAdd').dataset.justDragged) openSheet(); };
 
-/* ===== FAB 드래그 이동 ===== */
+/* ===== FAB 드래그 이동 (뷰포트 전체 기준, CRM과 동일 방식) ===== */
 (function(){
-  const fab = $('fabAdd'), wrap = $('fabWrap');
+  const fab = $('fabAdd');
   const POS_KEY = 'farming_fab_pos';
-  let dragging=false, moved=false, startX=0, startY=0, origLeft=0, origTop=0;
+  const margin = 4;
 
+  function clamp(left, top){
+    const w = fab.offsetWidth, h = fab.offsetHeight;
+    const maxLeft = Math.max(margin, window.innerWidth - w - margin);
+    const maxTop = Math.max(margin, window.innerHeight - h - margin);
+    return { left: Math.min(Math.max(left, margin), maxLeft), top: Math.min(Math.max(top, margin), maxTop) };
+  }
   function applyPos(left, top){
     fab.style.left = left+'px'; fab.style.top = top+'px';
     fab.style.right='auto'; fab.style.bottom='auto';
   }
   try{
     const saved = JSON.parse(localStorage.getItem(POS_KEY));
-    if(saved && typeof saved.left==='number') applyPos(saved.left, saved.top);
+    if(saved && typeof saved.left==='number'){
+      const c = clamp(saved.left, saved.top);
+      applyPos(c.left, c.top);
+    }
   }catch(e){}
 
+  let dragging=false, moved=false, startX=0, startY=0, origLeft=0, origTop=0;
   fab.addEventListener('pointerdown', e=>{
     dragging=true; moved=false;
     const r = fab.getBoundingClientRect();
@@ -876,22 +886,26 @@ $('fabAdd').onclick = ()=>{ if(!$('fabAdd').dataset.justDragged) openSheet(); };
     const dx=e.clientX-startX, dy=e.clientY-startY;
     if(Math.abs(dx)>4 || Math.abs(dy)>4) moved=true;
     if(!moved) return;
-    const wrapRect = wrap.getBoundingClientRect();
-    const r = fab.getBoundingClientRect();
-    let left = origLeft+dx-wrapRect.left;
-    let top = origTop+dy-wrapRect.top;
-    left = Math.max(4, Math.min(left, wrapRect.width-r.width-4));
-    top = Math.max(4, Math.min(top, wrapRect.height-r.height-4));
-    applyPos(left, top);
+    const c = clamp(origLeft+dx, origTop+dy);
+    applyPos(c.left, c.top);
   });
-  fab.addEventListener('pointerup', e=>{
+  function onUp(){
     if(!dragging) return;
     dragging=false;
     if(moved){
-      try{ localStorage.setItem(POS_KEY, JSON.stringify({left:parseFloat(fab.style.left), top:parseFloat(fab.style.top)})); }catch(er){}
+      const r = fab.getBoundingClientRect();
+      try{ localStorage.setItem(POS_KEY, JSON.stringify({left:r.left, top:r.top})); }catch(er){}
       fab.dataset.justDragged = '1';
       setTimeout(()=>{ delete fab.dataset.justDragged; }, 80);
     }
+  }
+  fab.addEventListener('pointerup', onUp);
+  fab.addEventListener('pointercancel', onUp);
+
+  window.addEventListener('resize', ()=>{
+    const r = fab.getBoundingClientRect();
+    const c = clamp(r.left, r.top);
+    applyPos(c.left, c.top);
   });
 })();
 $('scrim').onclick = e=>{ if(e.target.id==='scrim') closeSheet(); };
