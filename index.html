@@ -173,12 +173,16 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 .specs .pyung{grid-column:1/-1;font-weight:600;color:var(--muted);font-size:12.5px;margin-top:2px}
 .specs .pyung b{font-weight:700;color:var(--ink);font-size:13px}
 .memo{margin-top:7px;font-size:12px;color:var(--muted);background:var(--bg);border-radius:8px;padding:7px 10px}
-.stamp{flex:none;min-width:76px;padding:7px 9px;border-radius:9px;font-weight:800;font-size:12.5px;border:1.5px solid;letter-spacing:-.01em;transition:transform .08s;text-align:center}
+.stamp{flex:none;min-width:76px;padding:7px 9px;border-radius:9px;font-weight:800;font-size:12.5px;border:1.5px solid;letter-spacing:-.01em;transition:transform .08s;display:flex;align-items:center;justify-content:center;gap:4px}
+.stamp svg{flex:none}
 .stamp:active{transform:scale(.94)}
 .stamp.s0{color:var(--wolse);border-color:var(--wolse);background:var(--wolse-bg)}
 .stamp.s1{color:var(--sale);border-color:var(--sale);background:var(--sale-bg)}
 .stamp.s2{color:var(--jeonse);border-color:var(--jeonse);background:var(--jeonse-bg)}
 .stamp.s3{color:var(--gray);border-color:var(--gray);background:var(--gray-bg)}
+.quickmemo-btn{display:flex;align-items:center;justify-content:center;gap:4px;min-width:76px;font-size:12.5px;font-weight:800;letter-spacing:-.01em;color:var(--sale);border:1.5px solid var(--sale);background:var(--sale-bg);border-radius:9px;padding:7px 9px;white-space:nowrap}
+.quickmemo-btn svg{flex:none}
+.quickmemo-btn:active{transform:scale(.94)}
 .card-foot{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:11px}
 .link-btn{text-align:center;padding:8px 4px;border-radius:9px;font-size:11.5px;font-weight:700;text-decoration:none;border:1.5px solid var(--line);color:var(--muted);background:var(--surface);display:flex;flex-direction:row;align-items:center;justify-content:center;gap:5px}
 .link-btn .ic{font-size:13px}
@@ -190,7 +194,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 .empty .em-s{font-size:13px}
 
 /* ---- FAB & 시트 ---- */
-.fab{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));background:var(--brand-2);color:#fff;font-weight:800;font-size:14px;padding:15px 22px;border-radius:999px;box-shadow:0 6px 18px rgba(31,122,77,.35);display:flex;align-items:center;gap:7px;pointer-events:auto;touch-action:none;user-select:none;white-space:nowrap;z-index:40}
+.fab{position:absolute;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));background:var(--brand-2);color:#fff;font-weight:800;font-size:14px;padding:15px 22px;border-radius:999px;box-shadow:0 6px 18px rgba(31,122,77,.35);display:flex;align-items:center;gap:7px;pointer-events:auto;touch-action:none;user-select:none}
 .fab:active{transform:scale(.96)}
 .scrim{position:fixed;inset:0;background:rgba(15,18,24,.42);z-index:50;display:none}
 .scrim.on{display:block}
@@ -256,7 +260,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   <div class="lock-logo">the<span class="o">o</span></div>
   <div class="lock-sub">파밍서치 · eXp Korea</div>
   <div class="lock-box">
-    <div class="lock-title">비밀번호를 입력하세요.</div>
+    <div class="lock-title">비밀번호를 입력하세요</div>
     <input id="lockInput" class="lock-input" type="password" name="pin-code-not-a-password"
       inputmode="numeric" maxlength="8" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
     <button class="lock-btn" id="lockBtn">확인</button>
@@ -336,7 +340,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   <div class="f-group">
     <label>매물 링크</label>
     <input id="fLink" placeholder="네이버 매물번호 또는 전체 URL(디스코·밸류맵 등)">
-    <div class="hint">숫자만 입력하면 네이버부동산 링크로 자동 변환됩니다.</div>
+    <div class="hint">숫자만 입력하면 네이버부동산 링크로 자동 변환됩니다</div>
   </div>
   <div class="f-group"><label>건물명</label><input id="fName" placeholder="예: 동양섬유사옥"></div>
   <div class="f-group">
@@ -367,6 +371,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
     <div class="f-group"><label>관리비(만)</label><input id="fMgmt" inputmode="numeric" placeholder="225"></div>
   </div>
   <div class="f-group"><label>특징/메모</label><textarea id="fMemo" placeholder="주차 가능, 컨디션 양호 등"></textarea></div>
+  <div class="f-group"><label>파밍메모</label><textarea id="fFarmMemo" placeholder="현장 확인 사항, 진행 상황 등"></textarea></div>
   <button class="submit" id="btnSave">저장</button>
 </div>
 
@@ -379,6 +384,15 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
       <button id="calNext">›</button>
     </div>
     <div class="cal-grid" id="calGrid"></div>
+  </div>
+</div>
+
+<!-- 파밍메모 빠른입력 모달 -->
+<div class="modal-scrim" id="memoModalScrim">
+  <div class="modal">
+    <div class="m-head"><span class="m-title">파밍메모</span><button class="m-close" id="mmClose">✕</button></div>
+    <textarea id="mmInput" placeholder="현장 확인 사항, 진행 상황 등" style="width:100%;height:100px;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-family:inherit;font-size:14px;color:var(--ink);outline:0;resize:none"></textarea>
+    <button class="submit" id="mmSave" style="margin-top:12px">저장</button>
   </div>
 </div>
 
@@ -406,6 +420,12 @@ const CONFIG = {
 };
 const STATUS = ['파밍예정','파밍완료','파밍보류','파밍취소'];
 const STATUS_CLASS = {'파밍예정':'s0','파밍완료':'s1','파밍보류':'s2','파밍취소':'s3'};
+const STATUS_ICON = {
+  '파밍예정': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  '파밍완료': '<path d="M20 6 9 17l-5-5"/>',
+  '파밍보류': '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>',
+  '파밍취소': '<path d="M18 6 6 18"/><path d="M6 6l12 12"/>',
+};
 const WD = ['일','월','화','수','목','금','토'];
 
 let state = {
@@ -527,9 +547,9 @@ function render(){
   const list = visibleProps();
   if(!list.length){
     if(state.statusFilter !== '전체' && scopedForCount.length > 0){
-      $('list').innerHTML = `<div class="empty"><div class="em-t">'${state.statusFilter}' 상태인 매물이 없습니다.</div></div>`;
+      $('list').innerHTML = `<div class="empty"><div class="em-t">'${state.statusFilter}' 상태인 매물이 없습니다</div><div class="em-s">전체 ${scopedForCount.length}건 중 이 상태는 0건이에요. 다른 상태를 확인해보세요</div></div>`;
     } else {
-      $('list').innerHTML = `<div class="empty"><div class="em-t">이 날짜엔 파밍 매물이 없습니다.</div><div class="em-s">아래 ＋ 버튼으로 매물을 추가하세요.</div></div>`;
+      $('list').innerHTML = `<div class="empty"><div class="em-t">이 날짜엔 파밍 매물이 없습니다</div><div class="em-s">아래 ＋ 버튼으로 매물을 추가하세요</div></div>`;
     }
     return;
   }
@@ -554,7 +574,10 @@ function render(){
           <div class="bname">${p.건물명 || p.주소 || '(이름 없음)'}</div>
           ${p.건물명 && p.주소 ? `<div class="addr">${p.주소}</div>` : ''}
         </div>
-        <button class="stamp ${STATUS_CLASS[p.파밍여부]||'s0'}" data-stamp="${p.매물ID}">${p.파밍여부||'파밍예정'}</button>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <button class="stamp ${STATUS_CLASS[p.파밍여부]||'s0'}" data-stamp="${p.매물ID}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${STATUS_ICON[p.파밍여부]||STATUS_ICON['파밍예정']}</svg>${p.파밍여부||'파밍예정'}</button>
+          <button class="quickmemo-btn" data-quickmemo="${p.매물ID}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>파밍메모${p.파밍메모?' ✓':''}</button>
+        </div>
       </div>
       <div class="farmdate"><span class="dot"></span>파밍일자 ${p.파밍일자||'-'}</div>
       <div class="specs">
@@ -566,6 +589,7 @@ function render(){
         <div class="pyung">평단가 <b>${p.평단가!==''&&p.평단가!==undefined?p.평단가:'-'}</b>만</div>
       </div>
       ${p.메모?`<div class="memo">${p.메모}</div>`:''}
+      ${p.파밍메모?`<div class="memo" style="background:var(--sale-bg);color:var(--sale);font-weight:600">📝 ${p.파밍메모}</div>`:''}
       <div class="card-foot">
         ${p.주소?`<a class="link-btn" href="${mapUrl(p.주소)}" target="_blank" rel="noopener"><span class="ic">🗺️</span>매물지도</a>`:`<span class="link-btn" style="opacity:.35"><span class="ic">🗺️</span>매물지도</span>`}
         ${link?`<a class="link-btn" href="${link}" target="_blank" rel="noopener"><span class="ic">🔗</span>매물광고</a>`:`<span class="link-btn" style="opacity:.35"><span class="ic">🔗</span>매물광고</span>`}
@@ -682,6 +706,8 @@ $('list').addEventListener('click', e=>{
   }
   const ed = e.target.closest('[data-edit]');
   if(ed){ openSheet(ed.dataset.edit); return; }
+  const qm = e.target.closest('[data-quickmemo]');
+  if(qm){ openMemoModal(qm.dataset.quickmemo); return; }
   const del = e.target.closest('[data-del]');
   if(del){
     if(!confirm('이 매물을 삭제할까요? 구글시트에서도 함께 삭제됩니다.')) return;
@@ -691,6 +717,27 @@ $('list').addEventListener('click', e=>{
     jsonp({mode:'delete', 매물ID:id}).then(()=>toast('삭제 완료')).catch(()=>toast('삭제 전송 실패'));
   }
 });
+
+let memoTargetId = null;
+function openMemoModal(id){
+  const p = state.properties.find(x=>x.매물ID===id); if(!p) return;
+  memoTargetId = id;
+  $('mmInput').value = p.파밍메모 || '';
+  $('memoModalScrim').classList.add('on');
+  setTimeout(()=>$('mmInput').focus(), 50);
+}
+$('mmClose').onclick = ()=>$('memoModalScrim').classList.remove('on');
+$('memoModalScrim').onclick = e=>{ if(e.target.id==='memoModalScrim') $('memoModalScrim').classList.remove('on'); };
+$('mmSave').onclick = async ()=>{
+  const p = state.properties.find(x=>x.매물ID===memoTargetId); if(!p) return;
+  const val = $('mmInput').value.trim();
+  p.파밍메모 = val;
+  $('memoModalScrim').classList.remove('on');
+  render();
+  toast('파밍메모 저장 완료');
+  try{ await jsonp({mode:'update', 매물ID:p.매물ID, 파밍메모:val}); }
+  catch(e){ toast('전송 실패 — 시트에 반영 안됐을 수 있음'); }
+};
 
 /* ===== 매물 추가/수정 시트 ===== */
 let addScope = 'routine';
@@ -724,7 +771,7 @@ function openSheet(editId){
   renderFTypePop(); renderFDealPop();
   $('fFloor').value = p?.층수||''; $('fFloorAll').value = p?.총층||''; $('fArea').value = p?.전용면적||'';
   $('fDeposit').value = p?.보증금매매가||''; $('fRent').value = p?.월세||''; $('fMgmt').value = p?.관리비||'';
-  $('fMemo').value = p?.메모||'';
+  $('fMemo').value = p?.메모||''; $('fFarmMemo').value = p?.파밍메모||'';
   $('scrim').classList.add('on'); $('sheetAdd').classList.add('on');
 }
 function closeSheet(){ $('scrim').classList.remove('on'); $('sheetAdd').classList.remove('on'); }
@@ -766,7 +813,7 @@ document.addEventListener('click', e=>{
 function renderFCustPop(){
   $('fCustPop').innerHTML = sortedCustomers().map(c=>
     `<div class="opt ${c.고객ID===formCustId?'sel':''}" data-fcust="${c.고객ID}"><span>${c.고객ID} · ${c.고객명}</span><span class="ck">✓</span></div>`
-  ).join('') || '<div class="opt">등록된 고객이 없습니다.</div>';
+  ).join('') || '<div class="opt">등록된 고객이 없습니다</div>';
 }
 $('fCustBtn').onclick = ()=>{ $('fCustBtn').classList.toggle('open'); $('fCustPop').classList.toggle('open'); };
 $('fCustPop').addEventListener('click', e=>{
@@ -785,75 +832,49 @@ document.addEventListener('click', e=>{
 
 $('fabAdd').onclick = ()=>{ if(!$('fabAdd').dataset.justDragged) openSheet(); };
 
-/* ===== FAB 드래그 이동 (CRM과 동일한 방식: 화면 전체 기준 자유 이동) ===== */
+/* ===== FAB 드래그 이동 ===== */
 (function(){
-  const fab = $('fabAdd');
+  const fab = $('fabAdd'), wrap = $('fabWrap');
   const POS_KEY = 'farming_fab_pos';
-  const margin = 12;
+  let dragging=false, moved=false, startX=0, startY=0, origLeft=0, origTop=0;
 
-  function clamp(x, y){
-    const w = fab.offsetWidth, h = fab.offsetHeight;
-    const maxX = Math.max(margin, window.innerWidth - w - margin);
-    const maxY = Math.max(margin, window.innerHeight - h - margin);
-    return { x: Math.min(Math.max(x, margin), maxX), y: Math.min(Math.max(y, margin), maxY) };
+  function applyPos(left, top){
+    fab.style.left = left+'px'; fab.style.top = top+'px';
+    fab.style.right='auto'; fab.style.bottom='auto';
   }
-  function setPos(x, y){
-    fab.style.left = x+'px';
-    fab.style.top = y+'px';
-    fab.style.right = 'auto';
-    fab.style.bottom = 'auto';
-  }
-  function savePos(x, y){
-    try{ localStorage.setItem(POS_KEY, JSON.stringify({x:x, y:y})); }catch(e){}
-  }
-  function initPos(){
-    let pos = null;
-    try{
-      const raw = localStorage.getItem(POS_KEY);
-      if(raw) pos = JSON.parse(raw);
-    }catch(e){}
-    if(pos && typeof pos.x === 'number' && typeof pos.y === 'number'){
-      const c = clamp(pos.x, pos.y);
-      setPos(c.x, c.y);
-    }
-    // 저장된 위치가 없으면 CSS 기본값(오른쪽 하단)을 그대로 사용
-  }
+  try{
+    const saved = JSON.parse(localStorage.getItem(POS_KEY));
+    if(saved && typeof saved.left==='number') applyPos(saved.left, saved.top);
+  }catch(e){}
 
-  let dragging=false, moved=false, startX=0, startY=0, origX=0, origY=0;
   fab.addEventListener('pointerdown', e=>{
     dragging=true; moved=false;
-    startX=e.clientX; startY=e.clientY;
     const r = fab.getBoundingClientRect();
-    origX=r.left; origY=r.top;
+    startX=e.clientX; startY=e.clientY; origLeft=r.left; origTop=r.top;
     fab.setPointerCapture(e.pointerId);
   });
   fab.addEventListener('pointermove', e=>{
     if(!dragging) return;
     const dx=e.clientX-startX, dy=e.clientY-startY;
     if(Math.abs(dx)>4 || Math.abs(dy)>4) moved=true;
-    const c = clamp(origX+dx, origY+dy);
-    setPos(c.x, c.y);
+    if(!moved) return;
+    const wrapRect = wrap.getBoundingClientRect();
+    const r = fab.getBoundingClientRect();
+    let left = origLeft+dx-wrapRect.left;
+    let top = origTop+dy-wrapRect.top;
+    left = Math.max(4, Math.min(left, wrapRect.width-r.width-4));
+    top = Math.max(4, Math.min(top, wrapRect.height-r.height-4));
+    applyPos(left, top);
   });
-  function onUp(){
+  fab.addEventListener('pointerup', e=>{
     if(!dragging) return;
     dragging=false;
     if(moved){
-      const r = fab.getBoundingClientRect();
-      savePos(r.left, r.top);
+      try{ localStorage.setItem(POS_KEY, JSON.stringify({left:parseFloat(fab.style.left), top:parseFloat(fab.style.top)})); }catch(er){}
       fab.dataset.justDragged = '1';
       setTimeout(()=>{ delete fab.dataset.justDragged; }, 80);
     }
-  }
-  fab.addEventListener('pointerup', onUp);
-  fab.addEventListener('pointercancel', onUp);
-
-  window.addEventListener('resize', ()=>{
-    const r = fab.getBoundingClientRect();
-    const c = clamp(r.left, r.top);
-    setPos(c.x, c.y);
   });
-
-  initPos();
 })();
 $('scrim').onclick = e=>{ if(e.target.id==='scrim') closeSheet(); };
 
@@ -870,9 +891,9 @@ $('btnSave').onclick = async ()=>{
     유형: formTypeValue, 거래유형: formDealValue,
     층수:$('fFloor').value.trim(), 총층:$('fFloorAll').value.trim(), 전용면적:$('fArea').value.trim(),
     보증금매매가:$('fDeposit').value.trim(), 월세:$('fRent').value.trim(), 관리비:$('fMgmt').value.trim(),
-    메모:$('fMemo').value.trim(), 고객ID: custId,
+    메모:$('fMemo').value.trim(), 파밍메모:$('fFarmMemo').value.trim(), 고객ID: custId,
   });
-  if(!p.주소 && !p.매물링크){ toast('주소 또는 매물링크를 입력하세요.'); return; }
+  if(!p.주소 && !p.매물링크){ toast('주소 또는 매물링크를 입력하세요'); return; }
   if(!isEdit) state.properties.unshift(p);
   closeSheet(); render();
   toast(isEdit?'수정 완료':'매물 추가 완료');
@@ -905,7 +926,7 @@ function openCustList(){
     `<div class="custlist-item" data-cust="${c.고객ID}">
       <div class="cn">${c.고객ID} · ${c.고객명}</div>
       <div class="cs">${c.희망지역||'-'} · ${c.희망거래유형||'-'} · ${c.평수최소||'?'}~${c.평수최대||'?'}평${c.연락처?' · '+c.연락처:''}</div>
-    </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다.</div></div>';
+    </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다</div></div>';
   $('scrimCustList').classList.add('on'); $('sheetCustList').classList.add('on');
 }
 $('btnCustList').onclick = openCustList;
@@ -933,11 +954,11 @@ if('serviceWorker' in navigator && location.protocol==='https:'){
   function unlock(){ lockScreen.style.display = 'none'; }
   function tryUnlock(){
     const entered = lockInput.value.trim();
-    if(!entered){ lockErr.textContent = '비밀번호를 입력해 주세요.'; return; }
+    if(!entered){ lockErr.textContent = '비밀번호를 입력해 주세요'; return; }
     if(!passLoaded){ if(!passLoading){ lockErr.textContent = '서버에 연결하는 중...'; loadPass(); } return; }
     if(!correctPass || entered === correctPass){ unlock(); }
     else {
-      lockErr.textContent = '비밀번호가 틀렸습니다.';
+      lockErr.textContent = '비밀번호가 틀렸습니다';
       lockInput.value=''; lockInput.focus();
       lockInput.style.borderColor='#E03A3A'; setTimeout(()=>{lockInput.style.borderColor='';},800);
     }
@@ -955,7 +976,7 @@ if('serviceWorker' in navigator && location.protocol==='https:'){
       try{ localStorage.setItem(PASS_CACHE_KEY, correctPass); }catch(e){}
       if(!correctPass && !hadCache) unlock();
     }catch(e){
-      if(!hadCache) lockErr.textContent = '서버 연결이 원활하지 않습니다. 확인 버튼을 다시 눌러주세요.';
+      if(!hadCache) lockErr.textContent = '서버 연결이 원활하지 않습니다. 확인 버튼을 다시 눌러주세요';
     }finally{ passLoading = false; }
   }
   loadPass();
