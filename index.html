@@ -203,15 +203,15 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 
 /* ---- 매물수정: CRM 스타일 중앙 플로팅 카드 ---- */
 .modalcard{
-  position:fixed; left:50%; top:50%; z-index:60;
-  width:calc(100% - 32px); max-width:440px; max-height:85vh;
+  position:fixed; left:50%; top:calc(env(safe-area-inset-top) + 18px); z-index:60;
+  width:calc(100% - 32px); max-width:440px; max-height:calc(100vh - env(safe-area-inset-top) - 36px);
   background:var(--surface); border-radius:20px; overflow-y:auto;
-  transform:translate(-50%,-50%) scale(.96); opacity:0; pointer-events:none;
+  transform:translateX(-50%) scale(.96); opacity:0; pointer-events:none;
   transition:transform .2s ease, opacity .2s ease;
   padding:6px 18px calc(20px + env(safe-area-inset-bottom));
   box-shadow:0 20px 50px rgba(15,18,24,.28);
 }
-.modalcard.on{transform:translate(-50%,-50%) scale(1); opacity:1; pointer-events:auto}
+.modalcard.on{transform:translateX(-50%) scale(1); opacity:1; pointer-events:auto}
 .mc-head{display:flex;align-items:center;justify-content:space-between;padding:8px 0 12px;margin-bottom:14px;border-bottom:1px solid var(--line)}
 .mc-head h2{margin:0;font-size:16px;font-weight:800}
 .mc-close{font-size:13px;font-weight:700;color:var(--muted);padding:6px 2px}
