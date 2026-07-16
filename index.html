@@ -389,6 +389,10 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   </div>
   <div class="f-group"><label>특징/메모</label><textarea id="fMemo" placeholder="주차 가능, 컨디션 양호 등"></textarea></div>
   <div class="f-group"><label>파밍메모</label><textarea id="fFarmMemo" placeholder="현장 확인 사항, 진행 상황 등"></textarea></div>
+  <div class="f-row">
+    <div class="f-group"><label>등록일자</label><input id="fRegDate" placeholder="예: 2026-07-20"></div>
+    <div class="f-group"><label>매물장번호</label><input id="fLedger" placeholder="예: 25-013"></div>
+  </div>
   <button class="submit" id="btnSave">저장</button>
 </div>
 
@@ -789,6 +793,7 @@ function openSheet(editId){
   $('fFloor').value = p?.층수||''; $('fFloorAll').value = p?.총층||''; $('fArea').value = p?.전용면적||'';
   $('fDeposit').value = p?.보증금매매가||''; $('fRent').value = p?.월세||''; $('fMgmt').value = p?.관리비||'';
   $('fMemo').value = p?.메모||''; $('fFarmMemo').value = p?.파밍메모||'';
+  $('fRegDate').value = p?.등록일자||''; $('fLedger').value = p?.매물장번호||'';
   $('scrim').classList.add('on'); $('sheetAdd').classList.add('on');
 }
 function closeSheet(){ $('scrim').classList.remove('on'); $('sheetAdd').classList.remove('on'); }
@@ -924,6 +929,7 @@ $('btnSave').onclick = async ()=>{
     층수:$('fFloor').value.trim(), 총층:$('fFloorAll').value.trim(), 전용면적:$('fArea').value.trim(),
     보증금매매가:$('fDeposit').value.trim(), 월세:$('fRent').value.trim(), 관리비:$('fMgmt').value.trim(),
     메모:$('fMemo').value.trim(), 파밍메모:$('fFarmMemo').value.trim(), 고객ID: custId,
+    등록일자:$('fRegDate').value.trim(), 매물장번호:$('fLedger').value.trim(),
   });
   if(!p.주소 && !p.매물링크){ toast('주소 또는 매물링크를 입력하세요'); return; }
   if(!isEdit) state.properties.unshift(p);
