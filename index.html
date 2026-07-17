@@ -359,12 +359,12 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   </div>
   <div class="f-group">
     <label>매물 링크</label>
-    <input id="fLink" placeholder="네이버 매물번호 또는 전체 URL(디스코·밸류맵 등)">
+    <input id="fLink" name="x-fm-link" placeholder="네이버 매물번호 또는 전체 URL(디스코·밸류맵 등)" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
     <div class="hint">숫자만 입력하면 네이버부동산 링크로 자동 변환됩니다</div>
   </div>
-  <div class="f-group"><label>건물명</label><input id="fName" placeholder="예: 동양섬유사옥"></div>
+  <div class="f-group"><label>건물명</label><input id="fName" name="x-fm-name" placeholder="예: 동양섬유사옥" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
   <div class="f-group">
-    <label>주소</label><input id="fAddr" placeholder="예: 서울특별시 중구 신당동 421-5">
+    <label>주소</label><input id="fAddr" name="x-fm-addr" placeholder="예: 서울특별시 중구 신당동 421-5" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
   </div>
   <div class="f-row">
     <div class="f-group"><label>유형</label>
@@ -381,20 +381,20 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
     </div>
   </div>
   <div class="f-row">
-    <div class="f-group"><label>층수</label><input id="fFloor" placeholder="4"></div>
-    <div class="f-group"><label>총층</label><input id="fFloorAll" placeholder="8"></div>
-    <div class="f-group"><label>전용면적(평)</label><input id="fArea" inputmode="decimal" placeholder="55"></div>
+    <div class="f-group"><label>층수</label><input id="fFloor" name="x-fm-floor" placeholder="4" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>총층</label><input id="fFloorAll" name="x-fm-floorall" placeholder="8" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>전용면적(평)</label><input id="fArea" name="x-fm-area" inputmode="decimal" placeholder="55" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
   </div>
   <div class="f-row">
-    <div class="f-group"><label>보증금/매매가(만)</label><input id="fDeposit" inputmode="numeric" placeholder="5000"></div>
-    <div class="f-group"><label>월세(만)</label><input id="fRent" inputmode="numeric" placeholder="400"></div>
-    <div class="f-group"><label>관리비(만)</label><input id="fMgmt" inputmode="numeric" placeholder="225"></div>
+    <div class="f-group"><label>보증금/매매가(만)</label><input id="fDeposit" name="x-fm-deposit" inputmode="numeric" placeholder="5000" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>월세(만)</label><input id="fRent" name="x-fm-rent" inputmode="numeric" placeholder="400" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>관리비(만)</label><input id="fMgmt" name="x-fm-mgmt" inputmode="numeric" placeholder="225" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
   </div>
-  <div class="f-group"><label>특징/메모</label><textarea id="fMemo" placeholder="주차 가능, 컨디션 양호 등"></textarea></div>
-  <div class="f-group"><label>파밍메모</label><textarea id="fFarmMemo" placeholder="현장 확인 사항, 진행 상황 등"></textarea></div>
+  <div class="f-group"><label>특징/메모</label><textarea id="fMemo" name="x-fm-memo" placeholder="주차 가능, 컨디션 양호 등" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></textarea></div>
+  <div class="f-group"><label>파밍메모</label><textarea id="fFarmMemo" name="x-fm-farmmemo" placeholder="현장 확인 사항, 진행 상황 등" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></textarea></div>
   <div class="f-row">
-    <div class="f-group"><label>등록일자</label><input id="fRegDate" placeholder="예: 2026-07-20"></div>
-    <div class="f-group"><label>매물장번호</label><input id="fLedger" placeholder="예: 25-013"></div>
+    <div class="f-group"><label>등록일자</label><input id="fRegDate" name="x-fm-regdate" placeholder="예: 2026-07-20" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>매물장번호</label><input id="fLedger" name="x-fm-ledger" placeholder="예: 25-013" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
   </div>
   <button class="submit" id="btnSave">저장</button>
 </div>
@@ -415,7 +415,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 <div class="modal-scrim" id="memoModalScrim">
   <div class="modal">
     <div class="m-head"><span class="m-title">파밍메모</span><button class="m-close" id="mmClose">✕</button></div>
-    <textarea id="mmInput" placeholder="현장 확인 사항, 진행 상황 등" style="width:100%;height:100px;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-family:inherit;font-size:14px;color:var(--ink);outline:0;resize:none"></textarea>
+    <textarea id="mmInput" name="x-fm-quickmemo" placeholder="현장 확인 사항, 진행 상황 등" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false" style="width:100%;height:100px;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-family:inherit;font-size:14px;color:var(--ink);outline:0;resize:none"></textarea>
     <button class="submit" id="mmSave" style="margin-top:12px">저장</button>
   </div>
 </div>
