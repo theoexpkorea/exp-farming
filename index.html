@@ -251,7 +251,19 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 /* ---- 고객 리스트(전체보기) ---- */
 .custlist-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}
 .custlist-item .cn{font-weight:800;font-size:14.5px}
+.custlist-item .cn-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .custlist-item .cs{font-size:12px;color:var(--muted);margin-top:3px}
+.custlist-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.custlist-head h2{margin:0}
+.custlist-addbtn{display:flex;align-items:center;gap:4px;font-size:12.5px;font-weight:800;color:#fff;background:var(--brand-2);padding:8px 12px;border-radius:10px}
+.custlist-addbtn:active{opacity:.85}
+.custlist-addbtn svg{flex:none}
+.custlist-actions{display:flex;gap:6px;flex:none}
+.custlist-actbtn{width:28px;height:28px;border-radius:8px;background:var(--chip);color:var(--muted);display:grid;place-items:center}
+.custlist-actbtn svg{width:14px;height:14px}
+.custlist-actbtn:active{background:var(--line-2)}
+.custlist-actbtn.del{color:var(--danger)}
+.custlist-actbtn.del:active{background:var(--danger-bg)}
 
 /* ---- 캘린더 팝업 ---- */
 .cal-scrim{position:fixed;inset:0;background:rgba(15,18,24,.5);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
@@ -425,6 +437,10 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   <div class="modal">
     <div class="m-head"><span class="m-title" id="cmTitle">고객 조건</span><button class="m-close" id="cmClose">✕</button></div>
     <div id="cmBody"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="link-btn" id="cmEditBtn" style="flex:1">수정</button>
+      <button class="link-btn del" id="cmDelBtn" style="flex:1">삭제</button>
+    </div>
   </div>
 </div>
 
@@ -432,8 +448,39 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 <div class="scrim" id="scrimCustList"></div>
 <div class="sheet" id="sheetCustList">
   <div class="sheet-grip"></div>
-  <h2>고객조건 보기</h2>
+  <div class="custlist-head">
+    <h2>고객조건 보기</h2>
+    <button class="custlist-addbtn" id="btnCustAdd"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>고객 추가</button>
+  </div>
   <div id="custListBody"></div>
+</div>
+
+<!-- 고객 추가/수정 -->
+<div class="scrim" id="custFormScrim"></div>
+<div class="modalcard" id="sheetCustForm">
+  <div class="sheet-grip"></div>
+  <div class="mc-head"><h2 id="custFormTitle">고객 추가</h2><button class="mc-close" id="btnCloseCustForm">닫기</button></div>
+  <div class="f-group"><label>고객구분</label><input id="cfKind" name="x-fm-custkind" placeholder="예: 매수, 임차 등" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  <div class="f-group"><label>고객명</label><input id="cfName" name="x-fm-custname" placeholder="예: 홍길동" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  <div class="f-group"><label>연락처</label><input id="cfPhone" name="x-fm-custphone" inputmode="tel" placeholder="예: 010-1234-5678" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  <div class="f-group"><label>희망 지역</label><input id="cfArea" name="x-fm-custarea" placeholder="예: 중구 신당동 일대" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  <div class="f-group"><label>희망 거래유형</label>
+    <div style="position:relative">
+      <button type="button" class="sortpick-btn" id="cfDealBtn"><span id="cfDealLabel">무관</span><span class="car">▾</span></button>
+      <div class="sortpick-pop" id="cfDealPop"></div>
+    </div>
+  </div>
+  <div class="f-row">
+    <div class="f-group"><label>평수(최소)</label><input id="cfPyMin" inputmode="decimal" name="x-fm-pymin" placeholder="20" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>평수(최대)</label><input id="cfPyMax" inputmode="decimal" name="x-fm-pymax" placeholder="40" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  </div>
+  <div class="f-row">
+    <div class="f-group"><label>예산 보증금/매매가(만)</label><input id="cfBudgetDeposit" inputmode="numeric" name="x-fm-budgetdep" placeholder="10000" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>예산 월세(만)</label><input id="cfBudgetRent" inputmode="numeric" name="x-fm-budgetrent" placeholder="300" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  </div>
+  <div class="f-group"><label>희망 층수</label><input id="cfFloor" name="x-fm-custfloor" placeholder="예: 1~3층" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  <div class="f-group"><label>기타 요청사항</label><textarea id="cfEtc" name="x-fm-custetc" placeholder="주차, 방향 등 기타 조건" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></textarea></div>
+  <button class="submit" id="btnCustSave">저장</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -955,8 +1002,10 @@ $('btnSave').onclick = async ()=>{
 };
 
 /* ===== 고객 상세 모달 ===== */
+let cmCurrentId = null;
 function openCustomerDetail(id){
   const c = state.customers.find(x=>x.고객ID===id); if(!c) return;
+  cmCurrentId = id;
   $('cmTitle').textContent = c.고객ID;
   const tel = c.연락처 ? `<a href="tel:${c.연락처}" style="color:var(--brand-2);font-weight:800;text-decoration:none">${c.연락처}</a>` : '-';
   $('cmBody').innerHTML = [
@@ -969,22 +1018,116 @@ function openCustomerDetail(id){
 }
 $('cmClose').onclick = ()=>$('custModalScrim').classList.remove('on');
 $('custModalScrim').onclick = e=>{ if(e.target.id==='custModalScrim') $('custModalScrim').classList.remove('on'); };
+$('cmEditBtn').onclick = ()=>{ $('custModalScrim').classList.remove('on'); if(cmCurrentId) openCustForm(cmCurrentId); };
+$('cmDelBtn').onclick = ()=>{ $('custModalScrim').classList.remove('on'); if(cmCurrentId) deleteCustomer(cmCurrentId); };
 
 /* ===== 고객 전체 리스트 ===== */
 function openCustList(){
   $('custListBody').innerHTML = sortedCustomers().map(c=>
     `<div class="custlist-item" data-cust="${c.고객ID}">
-      <div class="cn">${c.고객ID} · ${c.고객명}</div>
+      <div class="cn-row">
+        <div class="cn">${c.고객ID} · ${c.고객명}</div>
+        <div class="custlist-actions">
+          <button class="custlist-actbtn" data-cust-edit="${c.고객ID}" title="수정">${ICON_EDIT}</button>
+          <button class="custlist-actbtn del" data-cust-del="${c.고객ID}" title="삭제">${ICON_TRASH}</button>
+        </div>
+      </div>
       <div class="cs">${c.희망지역||'-'} · ${c.희망거래유형||'-'} · ${c.평수최소||'?'}~${c.평수최대||'?'}평${c.연락처?' · '+c.연락처:''}</div>
-    </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다</div></div>';
+    </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다</div><div class="em-s">위 \'고객 추가\' 버튼으로 조건을 등록하세요</div></div>';
   $('scrimCustList').classList.add('on'); $('sheetCustList').classList.add('on');
 }
 $('btnCustList').onclick = openCustList;
+$('btnCustAdd').onclick = ()=>openCustForm(null);
 $('scrimCustList').onclick = ()=>{ $('scrimCustList').classList.remove('on'); $('sheetCustList').classList.remove('on'); };
 $('custListBody').addEventListener('click', e=>{
+  const editBtn = e.target.closest('[data-cust-edit]');
+  if(editBtn){ openCustForm(editBtn.dataset.custEdit); return; }
+  const delBtn = e.target.closest('[data-cust-del]');
+  if(delBtn){ deleteCustomer(delBtn.dataset.custDel); return; }
   const item = e.target.closest('[data-cust]'); if(!item) return;
   openCustomerDetail(item.dataset.cust);
 });
+
+/* ===== 고객 추가/수정/삭제 ===== */
+let custEditId = null;
+let formCustDealValue = '무관';
+const CUST_DEAL_OPTIONS = ['무관', ...DEAL_OPTIONS];
+
+function openCustForm(id){
+  custEditId = id || null;
+  const c = custEditId ? state.customers.find(x=>x.고객ID===custEditId) : null;
+  $('custFormTitle').textContent = c ? '고객 수정' : '고객 추가';
+  $('cfKind').value = c?.고객구분 || '';
+  $('cfName').value = c?.고객명 || '';
+  $('cfPhone').value = c?.연락처 || '';
+  $('cfArea').value = c?.희망지역 || '';
+  formCustDealValue = c?.희망거래유형 || '무관';
+  $('cfDealLabel').textContent = formCustDealValue;
+  renderCfDealPop();
+  $('cfPyMin').value = c?.평수최소 || '';
+  $('cfPyMax').value = c?.평수최대 || '';
+  $('cfBudgetDeposit').value = c?.예산보증금매매가 || '';
+  $('cfBudgetRent').value = c?.예산월세 || '';
+  $('cfFloor').value = c?.희망층수 || '';
+  $('cfEtc').value = c?.기타요청 || '';
+  $('scrimCustList').classList.remove('on'); $('sheetCustList').classList.remove('on');
+  $('custFormScrim').classList.add('on'); $('sheetCustForm').classList.add('on');
+}
+function closeCustForm(){ $('custFormScrim').classList.remove('on'); $('sheetCustForm').classList.remove('on'); }
+$('btnCloseCustForm').onclick = closeCustForm;
+$('custFormScrim').onclick = e=>{ if(e.target.id==='custFormScrim') closeCustForm(); };
+
+function renderCfDealPop(){
+  $('cfDealPop').innerHTML = CUST_DEAL_OPTIONS.map(t=>
+    `<div class="opt ${t===formCustDealValue?'sel':''}" data-cfdeal="${t}"><span>${t}</span><span class="ck">✓</span></div>`
+  ).join('');
+}
+$('cfDealBtn').onclick = ()=>{ $('cfDealBtn').classList.toggle('open'); $('cfDealPop').classList.toggle('open'); };
+$('cfDealPop').addEventListener('click', e=>{
+  const o = e.target.closest('[data-cfdeal]'); if(!o) return;
+  formCustDealValue = o.dataset.cfdeal;
+  $('cfDealLabel').textContent = formCustDealValue;
+  $('cfDealBtn').classList.remove('open'); $('cfDealPop').classList.remove('open');
+  renderCfDealPop();
+});
+document.addEventListener('click', e=>{
+  if(!e.target.closest('#cfDealBtn') && !e.target.closest('#cfDealPop')){
+    $('cfDealBtn').classList.remove('open'); $('cfDealPop').classList.remove('open');
+  }
+});
+
+$('btnCustSave').onclick = async ()=>{
+  const isEdit = !!custEditId;
+  const name = $('cfName').value.trim();
+  if(!name){ toast('고객명을 입력하세요'); return; }
+  const c = isEdit ? state.customers.find(x=>x.고객ID===custEditId)
+                   : {고객ID:'(임시)'};
+  Object.assign(c, {
+    고객구분: $('cfKind').value.trim(), 고객명: name, 연락처: $('cfPhone').value.trim(),
+    희망지역: $('cfArea').value.trim(), 희망거래유형: formCustDealValue,
+    평수최소: $('cfPyMin').value.trim(), 평수최대: $('cfPyMax').value.trim(),
+    예산보증금매매가: $('cfBudgetDeposit').value.trim(), 예산월세: $('cfBudgetRent').value.trim(),
+    희망층수: $('cfFloor').value.trim(), 기타요청: $('cfEtc').value.trim(),
+  });
+  if(!isEdit) state.customers.unshift(c);
+  closeCustForm();
+  openCustList();
+  toast(isEdit ? '수정 완료' : '고객 추가 완료');
+  try{
+    const res = await jsonp(isEdit ? {mode:'custUpdate', ...c} : {mode:'custAdd', ...c});
+    if(!isEdit && res && res.고객ID){ c.고객ID = res.고객ID; }
+    await loadData();
+    openCustList();
+  }catch(e){ toast('전송 실패 — 시트에 반영 안됐을 수 있음'); }
+};
+
+function deleteCustomer(id){
+  if(!confirm('이 고객 조건을 삭제할까요? 배정된 매물의 적합여부 매칭이 끊어질 수 있습니다.')) return;
+  state.customers = state.customers.filter(c=>c.고객ID!==id);
+  openCustList();
+  toast('삭제 완료');
+  jsonp({mode:'custDelete', 고객ID:id}).then(()=>loadData().then(openCustList)).catch(()=>toast('삭제 전송 실패'));
+}
 
 $('btnRefresh').onclick = ()=>{
   $('btnRefresh').classList.add('spin');
