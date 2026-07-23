@@ -227,6 +227,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 .f-group{margin-bottom:12px}
 .f-group label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:5px}
 .f-group input,.f-group select,.f-group textarea{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-family:inherit;font-size:14.5px;color:var(--ink);outline:0}
+.f-group input:disabled{opacity:.55}
 .f-group textarea{resize:none;height:60px}
 .f-group input:focus,.f-group select:focus,.f-group textarea:focus{border-color:var(--brand-2);background:#fff}
 .hint{font-size:11.5px;color:#9aa1ab;margin-top:4px}
@@ -253,14 +254,14 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 .custlist-item .cn{font-weight:800;font-size:14.5px}
 .custlist-item .cn-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .custlist-item .cs{font-size:12px;color:var(--muted);margin-top:3px}
-.custlist-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.custlist-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .custlist-head h2{margin:0}
 .custlist-addbtn{display:flex;align-items:center;gap:4px;font-size:12.5px;font-weight:800;color:#fff;background:var(--brand-2);padding:8px 12px;border-radius:10px}
 .custlist-addbtn:active{opacity:.85}
 .custlist-addbtn svg{flex:none}
 .custlist-actions{display:flex;gap:6px;flex:none}
 .custlist-actbtn{width:28px;height:28px;border-radius:8px;background:var(--chip);color:var(--muted);display:grid;place-items:center}
-.custlist-actbtn svg{width:14px;height:14px}
+.custlist-actbtn svg{width:14px;height:14px;stroke:currentColor}
 .custlist-actbtn:active{background:var(--line-2)}
 .custlist-actbtn.del{color:var(--danger)}
 .custlist-actbtn.del:active{background:var(--danger-bg)}
@@ -460,7 +461,16 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 <div class="modalcard" id="sheetCustForm">
   <div class="sheet-grip"></div>
   <div class="mc-head"><h2 id="custFormTitle">고객 추가</h2><button class="mc-close" id="btnCloseCustForm">닫기</button></div>
-  <div class="f-group"><label>고객구분</label><input id="cfKind" name="x-fm-custkind" placeholder="예: 매수, 임차 등" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  <div class="f-group">
+    <label>고객ID</label>
+    <input id="cfId" name="x-fm-custid" placeholder="예: SH-0009" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
+    <div class="hint" id="cfIdHint">비워두면 자동으로 채번됩니다 (예: C0001)</div>
+  </div>
+  <div class="f-group">
+    <label>고객구분</label>
+    <input id="cfKind" name="x-fm-custkind" list="cfKindList" placeholder="예: SH, CU" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
+    <datalist id="cfKindList"><option value="SH"><option value="CU"></datalist>
+  </div>
   <div class="f-group"><label>고객명</label><input id="cfName" name="x-fm-custname" placeholder="예: 홍길동" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
   <div class="f-group"><label>연락처</label><input id="cfPhone" name="x-fm-custphone" inputmode="tel" placeholder="예: 010-1234-5678" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
   <div class="f-group"><label>희망 지역</label><input id="cfArea" name="x-fm-custarea" placeholder="예: 중구 신당동 일대" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
@@ -1057,6 +1067,9 @@ function openCustForm(id){
   custEditId = id || null;
   const c = custEditId ? state.customers.find(x=>x.고객ID===custEditId) : null;
   $('custFormTitle').textContent = c ? '고객 수정' : '고객 추가';
+  $('cfId').value = c?.고객ID || '';
+  $('cfId').disabled = !!c;
+  $('cfIdHint').textContent = c ? 'ID는 등록 후에는 변경할 수 없습니다' : '구글시트에 쓸 ID를 직접 입력하세요(예: SH-0009). 비워두면 자동 채번됩니다';
   $('cfKind').value = c?.고객구분 || '';
   $('cfName').value = c?.고객명 || '';
   $('cfPhone').value = c?.연락처 || '';
@@ -1100,8 +1113,12 @@ $('btnCustSave').onclick = async ()=>{
   const isEdit = !!custEditId;
   const name = $('cfName').value.trim();
   if(!name){ toast('고객명을 입력하세요'); return; }
+  const typedId = $('cfId').value.trim();
+  if(!isEdit && typedId && state.customers.some(x=>x.고객ID===typedId)){
+    toast('이미 존재하는 고객ID입니다'); return;
+  }
   const c = isEdit ? state.customers.find(x=>x.고객ID===custEditId)
-                   : {고객ID:'(임시)'};
+                   : {고객ID: typedId || '(임시)'};
   Object.assign(c, {
     고객구분: $('cfKind').value.trim(), 고객명: name, 연락처: $('cfPhone').value.trim(),
     희망지역: $('cfArea').value.trim(), 희망거래유형: formCustDealValue,
@@ -1113,8 +1130,16 @@ $('btnCustSave').onclick = async ()=>{
   closeCustForm();
   openCustList();
   toast(isEdit ? '수정 완료' : '고객 추가 완료');
+  const payload = { ...c };
+  if(!isEdit) payload.고객ID = typedId; // '(임시)' 대신 실제 입력값(빈 값이면 서버가 자동채번)을 전송
   try{
-    const res = await jsonp(isEdit ? {mode:'custUpdate', ...c} : {mode:'custAdd', ...c});
+    const res = await jsonp(isEdit ? {mode:'custUpdate', ...payload} : {mode:'custAdd', ...payload});
+    if(res && res.ok === false){
+      toast('저장 실패: ' + (res.error === 'duplicate id' ? '이미 존재하는 고객ID입니다' : res.error));
+      if(!isEdit) state.customers = state.customers.filter(x=>x!==c);
+      openCustList();
+      return;
+    }
     if(!isEdit && res && res.고객ID){ c.고객ID = res.고객ID; }
     await loadData();
     openCustList();
