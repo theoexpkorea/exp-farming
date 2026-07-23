@@ -255,8 +255,8 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 .custlist-item .cs{font-size:12px;color:var(--muted);margin-top:3px}
 .custlist-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .custlist-head h2{margin:0}
-.custlist-addbtn{display:flex;align-items:center;gap:4px;font-size:12.5px;font-weight:800;color:#fff;background:var(--brand-2);padding:8px 12px;border-radius:10px}
-.custlist-addbtn:active{opacity:.85}
+.custlist-addbtn{display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--brand-2);background:var(--surface);border:1px solid var(--line);padding:7px 12px;border-radius:999px}
+.custlist-addbtn:active{background:var(--line-2)}
 .custlist-addbtn svg{flex:none}
 
 /* ---- 캘린더 팝업 ---- */
@@ -456,17 +456,17 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   <div class="mc-head"><h2 id="custFormTitle">고객 추가</h2><button class="mc-close" id="btnCloseCustForm">닫기</button></div>
   <div class="f-group">
     <label>고객ID</label>
-    <input id="cfId" name="x-fm-custid" placeholder="예: SH-0009" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
+    <input id="cfId" readonly name="x-fm-custid" placeholder="예: SH-0009" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
     <div class="hint" id="cfIdHint">비워두면 자동으로 채번됩니다 (예: C0001)</div>
   </div>
   <div class="f-group">
     <label>고객구분</label>
-    <input id="cfKind" name="x-fm-custkind" list="cfKindList" placeholder="예: SH, CU" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
+    <input id="cfKind" readonly name="x-fm-custkind" list="cfKindList" placeholder="예: SH, CU" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
     <datalist id="cfKindList"><option value="SH"><option value="CU"></datalist>
   </div>
-  <div class="f-group"><label>고객명</label><input id="cfName" name="x-fm-custname" placeholder="예: 홍길동" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
-  <div class="f-group"><label>연락처</label><input id="cfPhone" name="x-fm-custphone" inputmode="tel" placeholder="예: 010-1234-5678" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
-  <div class="f-group"><label>희망 지역</label><input id="cfArea" name="x-fm-custarea" placeholder="예: 중구 신당동 일대" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  <div class="f-group"><label>고객명</label><input id="cfName" readonly name="x-fm-custname" placeholder="예: 홍길동" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  <div class="f-group"><label>연락처</label><input id="cfPhone" readonly name="x-fm-custphone" inputmode="tel" placeholder="예: 010-1234-5678" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  <div class="f-group"><label>희망 지역</label><input id="cfArea" readonly name="x-fm-custarea" placeholder="예: 중구 신당동 일대" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
   <div class="f-group"><label>희망 거래유형</label>
     <div style="position:relative">
       <button type="button" class="sortpick-btn" id="cfDealBtn"><span id="cfDealLabel">무관</span><span class="car">▾</span></button>
@@ -474,14 +474,14 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
     </div>
   </div>
   <div class="f-row">
-    <div class="f-group"><label>평수(최소)</label><input id="cfPyMin" inputmode="decimal" name="x-fm-pymin" placeholder="20" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
-    <div class="f-group"><label>평수(최대)</label><input id="cfPyMax" inputmode="decimal" name="x-fm-pymax" placeholder="40" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>평수(최소)</label><input id="cfPyMin" readonly inputmode="decimal" name="x-fm-pymin" placeholder="20" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>평수(최대)</label><input id="cfPyMax" readonly inputmode="decimal" name="x-fm-pymax" placeholder="40" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
   </div>
   <div class="f-row">
-    <div class="f-group"><label>예산 보증금/매매가(만)</label><input id="cfBudgetDeposit" inputmode="numeric" name="x-fm-budgetdep" placeholder="10000" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
-    <div class="f-group"><label>예산 월세(만)</label><input id="cfBudgetRent" inputmode="numeric" name="x-fm-budgetrent" placeholder="300" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>예산 보증금/매매가(만)</label><input id="cfBudgetDeposit" readonly inputmode="numeric" name="x-fm-budgetdep" placeholder="10000" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+    <div class="f-group"><label>예산 월세(만)</label><input id="cfBudgetRent" readonly inputmode="numeric" name="x-fm-budgetrent" placeholder="300" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
   </div>
-  <div class="f-group"><label>희망 층수</label><input id="cfFloor" name="x-fm-custfloor" placeholder="예: 1~3층" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
+  <div class="f-group"><label>희망 층수</label><input id="cfFloor" readonly name="x-fm-custfloor" placeholder="예: 1~3층" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></div>
   <div class="f-group"><label>기타 요청사항</label><textarea id="cfEtc" name="x-fm-custetc" placeholder="주차, 방향 등 기타 조건" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false"></textarea></div>
   <button class="submit" id="btnCustSave">저장</button>
 </div>
@@ -1046,8 +1046,20 @@ let custEditId = null;
 let formCustDealValue = '무관';
 const CUST_DEAL_OPTIONS = ['무관', ...DEAL_OPTIONS];
 
+/* 구글/삼성 브라우저의 자동입력·카드 제안 팝업 방지 —
+   readonly 상태로 두었다가 사용자가 실제로 탭해서 포커스할 때만 입력 가능하게 풀어줌
+   (autocomplete=off만으로는 일부 브라우저에서 제안 팝업이 계속 뜨는 문제의 표준 우회법) */
+const CUST_FORM_TEXT_IDS = ['cfId','cfKind','cfName','cfPhone','cfArea','cfPyMin','cfPyMax','cfBudgetDeposit','cfBudgetRent','cfFloor'];
+function resetCustFormReadonly(){
+  CUST_FORM_TEXT_IDS.forEach(id=>{ const el = $(id); if(el) el.setAttribute('readonly','readonly'); });
+}
+$('sheetCustForm').addEventListener('focusin', e=>{
+  if(e.target.matches('input[readonly]')) e.target.removeAttribute('readonly');
+});
+
 function openCustForm(id){
   custEditId = id || null;
+  resetCustFormReadonly();
   const c = custEditId ? state.customers.find(x=>x.고객ID===custEditId) : null;
   $('custFormTitle').textContent = c ? '고객 수정' : '고객 추가';
   $('cfId').value = c?.고객ID || '';
