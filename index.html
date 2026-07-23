@@ -252,19 +252,12 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
 /* ---- 고객 리스트(전체보기) ---- */
 .custlist-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}
 .custlist-item .cn{font-weight:800;font-size:14.5px}
-.custlist-item .cn-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .custlist-item .cs{font-size:12px;color:var(--muted);margin-top:3px}
 .custlist-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .custlist-head h2{margin:0}
 .custlist-addbtn{display:flex;align-items:center;gap:4px;font-size:12.5px;font-weight:800;color:#fff;background:var(--brand-2);padding:8px 12px;border-radius:10px}
 .custlist-addbtn:active{opacity:.85}
 .custlist-addbtn svg{flex:none}
-.custlist-actions{display:flex;gap:6px;flex:none}
-.custlist-actbtn{width:28px;height:28px;border-radius:8px;background:var(--chip);color:var(--muted);display:grid;place-items:center}
-.custlist-actbtn svg{width:14px;height:14px;stroke:currentColor}
-.custlist-actbtn:active{background:var(--line-2)}
-.custlist-actbtn.del{color:var(--danger)}
-.custlist-actbtn.del:active{background:var(--danger-bg)}
 
 /* ---- 캘린더 팝업 ---- */
 .cal-scrim{position:fixed;inset:0;background:rgba(15,18,24,.5);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
@@ -1035,13 +1028,7 @@ $('cmDelBtn').onclick = ()=>{ $('custModalScrim').classList.remove('on'); if(cmC
 function openCustList(){
   $('custListBody').innerHTML = sortedCustomers().map(c=>
     `<div class="custlist-item" data-cust="${c.고객ID}">
-      <div class="cn-row">
-        <div class="cn">${c.고객ID} · ${c.고객명}</div>
-        <div class="custlist-actions">
-          <button class="custlist-actbtn" data-cust-edit="${c.고객ID}" title="수정">${ICON_EDIT}</button>
-          <button class="custlist-actbtn del" data-cust-del="${c.고객ID}" title="삭제">${ICON_TRASH}</button>
-        </div>
-      </div>
+      <div class="cn">${c.고객ID} · ${c.고객명}</div>
       <div class="cs">${c.희망지역||'-'} · ${c.희망거래유형||'-'} · ${c.평수최소||'?'}~${c.평수최대||'?'}평${c.연락처?' · '+c.연락처:''}</div>
     </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다</div><div class="em-s">위 \'고객 추가\' 버튼으로 조건을 등록하세요</div></div>';
   $('scrimCustList').classList.add('on'); $('sheetCustList').classList.add('on');
@@ -1050,10 +1037,6 @@ $('btnCustList').onclick = openCustList;
 $('btnCustAdd').onclick = ()=>openCustForm(null);
 $('scrimCustList').onclick = ()=>{ $('scrimCustList').classList.remove('on'); $('sheetCustList').classList.remove('on'); };
 $('custListBody').addEventListener('click', e=>{
-  const editBtn = e.target.closest('[data-cust-edit]');
-  if(editBtn){ openCustForm(editBtn.dataset.custEdit); return; }
-  const delBtn = e.target.closest('[data-cust-del]');
-  if(delBtn){ deleteCustomer(delBtn.dataset.custDel); return; }
   const item = e.target.closest('[data-cust]'); if(!item) return;
   openCustomerDetail(item.dataset.cust);
 });
