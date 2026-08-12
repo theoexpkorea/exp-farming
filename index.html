@@ -642,7 +642,7 @@ function render(){
     return `<div class="card ${STATUS_CLASS[p.파밍여부]?'st-'+STATUS_CLASS[p.파밍여부]:'st-s0'}">
       <div class="idrow">
         <span class="idchip">${p.매물ID||''}</span>
-        ${p.고객ID?`<span class="idchip cust">${p.고객ID}</span>`:''}
+        ${p.고객ID?`<span class="idchip cust">${fit==='고객정보없음'?'고객종료':p.고객ID}</span>`:''}
         ${p.매물장번호?(CONFIG.MAEMUL_URL
           ? `<a class="idchip ledger" href="${CONFIG.MAEMUL_URL}${encodeURIComponent(p.매물장번호)}" target="_blank" rel="noopener">${p.매물장번호}</a>`
           : `<span class="idchip ledger">${p.매물장번호}</span>`):''}
@@ -652,7 +652,7 @@ function render(){
           <div class="tags">
             ${p.거래유형?`<span class="tag deal ${p.거래유형}">${p.거래유형}</span>`:''}
             ${p.유형?`<span class="tag type-${typeClass(p.유형)}">${p.유형}</span>`:''}
-            ${fit?`<span class="tag ${fitClass}">${fit}</span>`:''}
+            ${fit && fit!=='고객정보없음'?`<span class="tag ${fitClass}">${fit}</span>`:''}
           </div>
           <div class="bname">${p.건물명 || p.주소 || '(이름 없음)'}</div>
           ${p.건물명 && p.주소 ? `<div class="addr">${p.주소}</div>` : ''}
