@@ -286,7 +286,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
   <div class="lock-logo">the<span class="o">o</span></div>
   <div class="lock-sub">파밍서치 · eXp Korea</div>
   <div class="lock-box">
-    <div class="lock-title">비밀번호를 입력하세요</div>
+    <div class="lock-title">비밀번호를 입력하세요.</div>
     <input id="lockInput" class="lock-input" type="password" name="pin-code-not-a-password"
       inputmode="numeric" maxlength="8" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" spellcheck="false">
     <button class="lock-btn" id="lockBtn">확인</button>
@@ -1167,11 +1167,11 @@ if('serviceWorker' in navigator && location.protocol==='https:'){
   function unlock(){ lockScreen.style.display = 'none'; }
   function tryUnlock(){
     const entered = lockInput.value.trim();
-    if(!entered){ lockErr.textContent = '비밀번호를 입력해 주세요'; return; }
+    if(!entered){ lockErr.textContent = '비밀번호를 입력해 주세요.'; return; }
     if(!passLoaded){ if(!passLoading){ lockErr.textContent = '서버에 연결하는 중...'; loadPass(); } return; }
     if(!correctPass || entered === correctPass){ unlock(); }
     else {
-      lockErr.textContent = '비밀번호가 틀렸습니다';
+      lockErr.textContent = '비밀번호가 틀렸습니다.';
       lockInput.value=''; lockInput.focus();
       lockInput.style.borderColor='#E03A3A'; setTimeout(()=>{lockInput.style.borderColor='';},800);
     }
@@ -1189,7 +1189,7 @@ if('serviceWorker' in navigator && location.protocol==='https:'){
       try{ localStorage.setItem(PASS_CACHE_KEY, correctPass); }catch(e){}
       if(!correctPass && !hadCache) unlock();
     }catch(e){
-      if(!hadCache) lockErr.textContent = '서버 연결이 원활하지 않습니다. 확인 버튼을 다시 눌러주세요';
+      if(!hadCache) lockErr.textContent = '서버 연결이 원활하지 않습니다. 확인 버튼을 다시 눌러주세요.';
     }finally{ passLoading = false; }
   }
   loadPass();
