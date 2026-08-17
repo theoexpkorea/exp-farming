@@ -627,9 +627,9 @@ function render(){
   const list = visibleProps();
   if(!list.length){
     if(state.statusFilter !== '전체' && scopedForCount.length > 0){
-      $('list').innerHTML = `<div class="empty"><div class="em-t">'${state.statusFilter}' 상태인 매물이 없습니다</div><div class="em-s">전체 ${scopedForCount.length}건 중 이 상태는 0건이에요. 다른 상태를 확인해보세요</div></div>`;
+      $('list').innerHTML = `<div class="empty"><div class="em-t">'${state.statusFilter}' 상태인 매물이 없습니다.</div><div class="em-s">전체 ${scopedForCount.length}건 중 이 상태는 0건이에요. 다른 상태를 확인해보세요.</div></div>`;
     } else {
-      $('list').innerHTML = `<div class="empty"><div class="em-t">이 날짜엔 파밍 매물이 없습니다</div><div class="em-s">아래 ＋ 버튼으로 매물을 추가하세요</div></div>`;
+      $('list').innerHTML = `<div class="empty"><div class="em-t">이 날짜엔 파밍 매물이 없습니다.</div><div class="em-s">아래 ＋ 버튼으로 매물을 추가하세요.</div></div>`;
     }
     return;
   }
@@ -898,7 +898,7 @@ document.addEventListener('click', e=>{
 function renderFCustPop(){
   $('fCustPop').innerHTML = sortedCustomers().map(c=>
     `<div class="opt ${c.고객ID===formCustId?'sel':''}" data-fcust="${c.고객ID}"><span>${c.고객ID} · ${c.고객명}</span><span class="ck">✓</span></div>`
-  ).join('') || '<div class="opt">등록된 고객이 없습니다</div>';
+  ).join('') || '<div class="opt">등록된 고객이 없습니다.</div>';
 }
 $('fCustBtn').onclick = ()=>{ $('fCustBtn').classList.toggle('open'); $('fCustPop').classList.toggle('open'); };
 $('fCustPop').addEventListener('click', e=>{
@@ -1030,7 +1030,7 @@ function openCustList(){
     `<div class="custlist-item" data-cust="${c.고객ID}">
       <div class="cn">${c.고객ID} · ${c.고객명}</div>
       <div class="cs">${c.희망지역||'-'} · ${c.희망거래유형||'-'} · ${c.평수최소||'?'}~${c.평수최대||'?'}평${c.연락처?' · '+c.연락처:''}</div>
-    </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다</div><div class="em-s">위 \'고객 추가\' 버튼으로 조건을 등록하세요</div></div>';
+    </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다.</div><div class="em-s">위 \'고객 추가\' 버튼으로 조건을 등록하세요.</div></div>';
   $('scrimCustList').classList.add('on'); $('sheetCustList').classList.add('on');
 }
 $('btnCustList').onclick = openCustList;
