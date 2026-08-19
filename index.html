@@ -432,6 +432,7 @@ main{padding:8px 12px 0;display:flex;flex-direction:column;gap:11px}
     <div class="m-head"><span class="m-title" id="cmTitle">고객 조건</span><button class="m-close" id="cmClose">✕</button></div>
     <div id="cmBody"></div>
     <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="link-btn" id="cmHoldBtn" style="flex:1">보류로 표시</button>
       <button class="link-btn" id="cmEditBtn" style="flex:1">수정</button>
       <button class="link-btn del" id="cmDelBtn" style="flex:1">삭제</button>
     </div>
@@ -1022,12 +1023,33 @@ function openCustomerDetail(id){
     ['예산 보증금/매매가', c.예산보증금매매가], ['예산 월세', c.예산월세],
     ['희망 층수', c.희망층수], ['기타 요청사항', c.기타요청],
   ].map(([k,v,raw])=>`<div class="crow"><div class="ck">${k}</div><div class="cv">${raw ? v : (v||'-')}</div></div>`).join('');
+  $('cmHoldBtn').textContent = c.상태==='보류' ? '보류 해제' : '보류로 표시';
   $('custModalScrim').classList.add('on');
 }
 $('cmClose').onclick = ()=>$('custModalScrim').classList.remove('on');
 $('custModalScrim').onclick = e=>{ if(e.target.id==='custModalScrim') $('custModalScrim').classList.remove('on'); };
 $('cmEditBtn').onclick = ()=>{ $('custModalScrim').classList.remove('on'); if(cmCurrentId) openCustForm(cmCurrentId); };
 $('cmDelBtn').onclick = ()=>{ $('custModalScrim').classList.remove('on'); if(cmCurrentId) deleteCustomer(cmCurrentId); };
+$('cmHoldBtn').onclick = async ()=>{
+  if(!cmCurrentId) return;
+  const c = state.customers.find(x=>x.고객ID===cmCurrentId); if(!c) return;
+  const next = c.상태==='보류' ? '' : '보류';
+  const prev = c.상태;
+  c.상태 = next; // 화면 먼저 반영
+  $('cmHoldBtn').textContent = next==='보류' ? '보류 해제' : '보류로 표시';
+  $('cmHoldBtn').disabled = true;
+  try{
+    const res = await jsonp({mode:'custUpdate', 고객ID: cmCurrentId, 상태: next});
+    if(res && res.ok===false) throw new Error(res.error||'실패');
+    toast(next==='보류' ? '보류로 표시했어요.' : '보류를 해제했어요.');
+  }catch(e){
+    c.상태 = prev; // 실패 시 원복
+    $('cmHoldBtn').textContent = prev==='보류' ? '보류 해제' : '보류로 표시';
+    toast('저장 실패 — 다시 시도해 주세요.');
+  }finally{
+    $('cmHoldBtn').disabled = false;
+  }
+};
 
 /* ===== 고객 전체 리스트 ===== */
 function openCustList(){
