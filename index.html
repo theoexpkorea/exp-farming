@@ -524,7 +524,11 @@ function mapUrl(addr){ return 'https://map.naver.com/p/search/' + encodeURICompo
 const TYPE_CLASS_MAP = {'토지(나대지)':'토지', '재건축재개발':'재개발'};
 function typeClass(t){ return TYPE_CLASS_MAP[t] || t || ''; }
 function sortedCustomers(){
-  return state.customers.filter(c=>c.상태!=='보류').sort((a,b)=> String(a.고객ID).localeCompare(String(b.고객ID)));
+  return [...state.customers].sort((a,b)=>{
+    const ah = a.상태==='보류' ? 1:0, bh = b.상태==='보류' ? 1:0;
+    if(ah!==bh) return ah-bh;
+    return String(a.고객ID).localeCompare(String(b.고객ID));
+  });
 }
 function propLinkUrl(v){
   if(!v) return '';
@@ -897,11 +901,8 @@ document.addEventListener('click', e=>{
 });
 
 function renderFCustPop(){
-  let list = sortedCustomers();
-  if(formCustId && !list.some(c=>c.고객ID===formCustId)){
-    const held = state.customers.find(c=>c.고객ID===formCustId);
-    if(held) list = [held, ...list];
-  }
+  const list = state.customers.filter(c=>c.상태!=='보류' || c.고객ID===formCustId)
+    .sort((a,b)=> String(a.고객ID).localeCompare(String(b.고객ID)));
   $('fCustPop').innerHTML = list.map(c=>
     `<div class="opt ${c.고객ID===formCustId?'sel':''}" data-fcust="${c.고객ID}"><span>${c.고객ID} · ${c.고객명}</span><span class="ck">✓</span></div>`
   ).join('') || '<div class="opt">등록된 고객이 없습니다.</div>';
@@ -1055,7 +1056,7 @@ $('cmHoldBtn').onclick = async ()=>{
 function openCustList(){
   $('custListBody').innerHTML = sortedCustomers().map(c=>
     `<div class="custlist-item" data-cust="${c.고객ID}">
-      <div class="cn">${c.고객ID} · ${c.고객명}</div>
+      <div class="cn">${c.고객ID} · ${c.고객명}${c.상태==='보류' ? ' <span style="color:#94a3b8;font-weight:600;font-size:12px;">· 보류</span>' : ''}</div>
       <div class="cs">${c.희망지역||'-'} · ${c.희망거래유형||'-'} · ${c.평수최소||'?'}~${c.평수최대||'?'}평${c.연락처?' · '+c.연락처:''}</div>
     </div>`).join('') || '<div class="empty"><div class="em-t">등록된 고객이 없습니다.</div><div class="em-s">위 \'고객 추가\' 버튼으로 조건을 등록하세요.</div></div>';
   $('scrimCustList').classList.add('on'); $('sheetCustList').classList.add('on');
