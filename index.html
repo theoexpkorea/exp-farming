@@ -1171,8 +1171,14 @@ $('btnCustSave').onclick = async ()=>{
 
 function deleteCustomer(id){
   if(!confirm('이 고객 조건을 삭제할까요? 배정된 매물의 적합여부 매칭이 끊어질 수 있습니다.')) return;
-  state.customers = state.customers.filter(c=>c.고객ID!==id);
-  openCustList();
+  const body = $('custListBody');
+  body.style.transition = 'opacity 0.15s ease';
+  body.style.opacity = '0';
+  setTimeout(()=>{
+    state.customers = state.customers.filter(c=>c.고객ID!==id);
+    openCustList();
+    body.style.opacity = '1';
+  }, 150);
   toast('삭제 완료');
   jsonp({mode:'custDelete', 고객ID:id}).then(()=>loadData().then(openCustList)).catch(()=>toast('삭제 전송 실패'));
 }
